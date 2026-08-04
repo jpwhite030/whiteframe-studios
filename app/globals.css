@@ -1,26 +1,181 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Canvas — warm near-black, with two raised steps. */
+  --color-canvas: #0f0e0c;
+  --color-canvas-100: #171613;
+  --color-canvas-200: #201e1a;
+
+  /* Text on canvas */
+  --color-bone: #f4f1ea;
+  --color-bone-700: #cbc6bc;
+  --color-muted: #928c81;
+  --color-faint: #6a655c;
+
+  /* Structure */
+  --color-line: #2b2926;
+  --color-line-strong: #423f3a;
+
+  /* Light surfaces — used by the product panels, which read as lit screens. */
+  --color-paper: #f4f1ea;
+  --color-paper-100: #ece8df;
+  --color-paper-200: #e2ddd2;
+  --color-ink: #14130f;
+  --color-ink-700: #45423b;
+  --color-ink-faint: #8d887e;
+  --color-paper-line: #d4cfc4;
+
+  /* One accent. Bright enough to carry text on the canvas. */
+  --color-accent: #7189ff;
+  --color-accent-deep: #3b54e0;
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-mono: var(--font-mono-jetbrains), ui-monospace, monospace;
+
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --header-height: 4.25rem;
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-height) + 1rem);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-canvas);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  select {
+    appearance: none;
+  }
+
+  /* Dark canvas, light option list — keep the native menu readable. */
+  select option {
+    background-color: var(--color-canvas-100);
+    color: var(--color-bone);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-faint);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Page gutter. One source of truth for horizontal rhythm. */
+@utility shell {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 96rem;
+  padding-inline: 1.375rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-inline: 4rem;
+  }
+
+  @media (width >= 100rem) {
+    padding-inline: 5rem;
+  }
+}
+
+/* Small monospaced label used for section numbers, eyebrows and meta. */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Hairline column grid, used inside light panels. */
+@utility rule-grid {
+  background-image: linear-gradient(
+    to right,
+    var(--color-paper-line) 0 1px,
+    transparent 1px 100%
+  );
+  background-size: calc(100% / 3) 100%;
+
+  @media (width >= 48rem) {
+    background-size: calc(100% / 6) 100%;
+  }
+}
+
+/* Film grain. Flat surfaces this large read as machine-made without it. */
+@utility grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
