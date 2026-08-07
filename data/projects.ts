@@ -120,6 +120,8 @@ export const projects: readonly Project[] = [
       src: "/work/kingswood-portrait.jpg",
       alt: "Kingswood band portrait in black and white",
       aspect: "1600 / 1200",
+      // Keep faces in frame when the landscape portrait crops into 4:5.
+      position: "50% 18%",
     },
     featured: {
       headline: "Building a digital experience worthy of the band’s live presence.",
