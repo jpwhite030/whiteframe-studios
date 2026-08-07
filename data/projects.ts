@@ -4,13 +4,16 @@
  * editing this file alone.
  */
 
-/** Which coded/photographic treatment the tile renders. */
+/**
+ * Which treatment the tile renders. `placeholder` is the honest state for a
+ * product with no capture yet — better a deliberate typographic card than an
+ * invented mockup standing in for a screen that doesn't exist.
+ */
 export type ProjectVisualKind =
   | "pubcam"
   | "tally"
   | "kingswood"
-  | "scaffold"
-  | "seatview";
+  | "placeholder";
 
 export type ProjectShot = {
   src: string;
@@ -23,6 +26,29 @@ export type ProjectShot = {
   /** object-position inside the frame, e.g. "50% 100%" to crop off the top. */
   position?: string;
   /** Phone width as a fraction of the tile, e.g. "56%". */
+  width?: string;
+};
+
+/**
+ * A screen recording of the product running. Shown in place of the still
+ * wherever a project has one; the still stays on as the poster frame, so a
+ * demo is always additive and never a prerequisite.
+ *
+ * Export notes for new recordings:
+ * - H.264 MP4 is the safe baseline; add a WebM/VP9 source for smaller files.
+ * - ~1080px wide is plenty for phone UI, and keeps the file honest.
+ * - Record silent. These autoplay, so they are always muted and loop.
+ */
+export type ProjectDemo = {
+  /** Sources in preference order — the browser takes the first it can play. */
+  sources: readonly { src: string; type: string }[];
+  /** Still shown before playback, and instead of it under reduced motion. */
+  poster: string;
+  /** Describes what the recording shows, for anyone who can't watch it. */
+  alt: string;
+  /** CSS aspect-ratio of the recording, e.g. "886 / 1920". */
+  aspect: string;
+  /** Width as a fraction of the tile, matching ProjectShot. */
   width?: string;
 };
 
@@ -49,6 +75,12 @@ export type Project = {
    * where the featured shot's composition doesn't crop well.
    */
   tileShot?: ProjectShot;
+  /**
+   * Screen recording of the product. Takes precedence over `shot` in the
+   * large feature contexts; cards stay on stills so a reel of five projects
+   * never becomes five simultaneous videos.
+   */
+  demo?: ProjectDemo;
   /** Featured in the editorial selected-work section. */
   featured?: {
     headline: string;
@@ -136,8 +168,8 @@ export const projects: readonly Project[] = [
     tags: ["Product", "3D", "Web"],
     status: "In development",
     href: null,
-    visual: "scaffold",
-    alt: "Abstract scaffold elevation drawing with a cobalt dimension line",
+    visual: "placeholder",
+    alt: "Scaffold Visualiser — capture coming",
   },
   {
     slug: "seat-view",
@@ -147,8 +179,8 @@ export const projects: readonly Project[] = [
     tags: ["Product", "3D", "SaaS"],
     status: "In development",
     href: null,
-    visual: "seatview",
-    alt: "Abstract cinema seat map with three selected seats highlighted in cobalt",
+    visual: "placeholder",
+    alt: "Seat View — capture coming",
   },
 ];
 

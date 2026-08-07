@@ -1,0 +1,83 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { useReducedMotion } from "motion/react";
+import type { ProjectDemo } from "@/data/projects";
+
+/**
+ * A silent, looping screen recording of a product.
+ *
+ * Playback is tied to visibility rather than to page load: a recording only
+ * runs while it is actually on screen, so a page carrying several of them
+ * costs one decode, not five. Nothing is fetched beyond the poster until the
+ * recording is close to being needed.
+ *
+ * Reduced motion is honoured properly — the recording never starts on its
+ * own, and native controls appear so it stays watchable by choice. That is
+ * the distinction the preference asks for: no unrequested motion, rather
+ * than no access to the content.
+ */
+export function ProductVideo({
+  demo,
+  className = "",
+  /** Poster only, no fetching, until the tile nears the viewport. */
+  preload = "none",
+}: {
+  demo: ProjectDemo;
+  className?: string;
+  preload?: "none" | "metadata";
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
+  // Null until the preference is known, which is the same on the server and
+  // on the first client render — so `manual` is false in both and hydration
+  // never mismatches. It resolves immediately after mount.
+  const reduceMotion = useReducedMotion();
+  const manual = reduceMotion === true;
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    if (reduceMotion) {
+      // Preference can flip mid-session — stop anything already running.
+      el.pause();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Autoplay can still be refused (low power mode, for one). The
+          // poster stays up in that case, which is a fine outcome.
+          void el.play().catch(() => {});
+        } else {
+          el.pause();
+        }
+      },
+      { threshold: 0.25 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [reduceMotion]);
+
+  return (
+    <video
+      ref={ref}
+      poster={demo.poster}
+      // Muted is what makes autoplay permissible at all; loop and inline
+      // keep it from taking over the page or going fullscreen on iOS.
+      muted
+      loop
+      playsInline
+      preload={preload}
+      controls={manual}
+      aria-label={demo.alt}
+      className={`size-full object-cover ${className}`}
+    >
+      {demo.sources.map((source) => (
+        <source key={source.src} src={source.src} type={source.type} />
+      ))}
+    </video>
+  );
+}
