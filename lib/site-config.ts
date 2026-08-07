@@ -1,14 +1,12 @@
 /**
  * Central site configuration.
- * Every piece of standing copy, contact detail and navigation target lives here
- * so that no string is duplicated across components.
+ * Every piece of standing copy, contact detail and navigation target lives
+ * here so that no string is duplicated across components.
  */
 
 export type NavItem = {
   label: string;
   href: string;
-  /** Section id used for active-state tracking in the header. */
-  sectionId: string;
 };
 
 export type SocialLink = {
@@ -18,8 +16,7 @@ export type SocialLink = {
 
 export const siteConfig = {
   name: "Whiteframe Studios",
-  /** Locked-up wordmark used in the header and footer. */
-  wordmark: "WHITEFRAME STUDIOS",
+  wordmark: "Whiteframe Studios",
   founder: "Jack White",
   location: "Sydney, Australia",
   locality: "Sydney",
@@ -39,31 +36,52 @@ export const siteConfig = {
       "AI systems",
       "automation",
       "MVP development",
-      "internal software",
+      "brand and interface design",
       "Sydney",
     ],
   },
 
   hero: {
-    eyebrow: "Independent product studio",
-    headline: "We turn ideas into working products.",
+    headline: "We design and build software people actually want to use.",
     /** The same sentence, broken by hand so the hero reads as set type. */
-    headlineLines: ["We turn ideas into", "working products."],
+    headlineLines: ["We design and build", "software people", "actually want to use."],
     supporting:
-      "Whiteframe Studios designs and builds software, AI systems and digital products for founders and businesses.",
-    primaryCta: { label: "View selected work", href: "#work" },
+      "Whiteframe is an independent product studio turning ambitious ideas into brands, apps and digital products.",
+    primaryCta: { label: "View our work", href: "#work" },
     secondaryCta: { label: "Start a project", href: "#contact" },
-    signature: "Founded by Jack White — Sydney, Australia",
   },
 
-  footerStatement: "Software, systems and products built with intent.",
+  statement: {
+    lines: ["From an idea in your head", "to software in your customers’ hands."],
+    supporting:
+      "We work across strategy, design and engineering to take digital products from first sketch to launch—and beyond.",
+  },
+
+  founderBand: {
+    headline: "Small team. Senior execution. No layers of account management.",
+    supporting:
+      "You work directly with the people designing and building your product. That means faster decisions, clearer communication and better work.",
+    principles: [
+      "Move with urgency",
+      "Sweat the important details",
+      "Build for real-world use",
+    ],
+  },
+
+  cta: {
+    headline: "Have something ambitious in mind?",
+    button: "Let’s build it.",
+  },
+
+  footerLine: "Independent by design.",
 
   nav: [
-    { label: "Work", href: "#work", sectionId: "work" },
-    { label: "Services", href: "#services", sectionId: "services" },
-    { label: "About", href: "#founder", sectionId: "founder" },
-    { label: "Contact", href: "#contact", sectionId: "contact" },
+    { label: "Work", href: "#work" },
+    { label: "Services", href: "#services" },
+    { label: "Studio", href: "#studio" },
   ] satisfies NavItem[],
+
+  navCta: { label: "Start a project", href: "#contact" } satisfies NavItem,
 
   /** Placeholder handles — swap for the live accounts before launch. */
   socials: [
@@ -71,6 +89,11 @@ export const siteConfig = {
     { label: "LinkedIn", href: "https://linkedin.com/company/whiteframestudios" },
     { label: "GitHub", href: "https://github.com/whiteframestudios" },
   ] satisfies SocialLink[],
+
+  legal: [
+    { label: "Privacy", href: "/privacy" },
+    { label: "Terms", href: "/terms" },
+  ] satisfies NavItem[],
 } as const;
 
 export type SiteConfig = typeof siteConfig;

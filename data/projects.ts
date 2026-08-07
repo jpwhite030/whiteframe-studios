@@ -1,165 +1,155 @@
-/** Visual treatments available to the project showcase. */
-export type ProjectVisual =
-  | "pubcam"
-  | "meridian"
-  | "tally"
-  | "skelscaff"
-  | "kingswood";
-
 /**
- * How the block sits on the page. Blocks deliberately do not share one
- * arrangement — a repeated frame is what makes work look like a template.
+ * All project content in one place, so cards, the hero window and the
+ * selected-work sections can be re-pointed at real case-study pages by
+ * editing this file alone.
  */
-export type ProjectLayout = "standard" | "bleed" | "full";
 
-/** Frame proportion, so no two panels are the same shape. */
-export type ProjectAspect = "wide" | "classic" | "tall" | "panorama" | "cinema";
+/** Which coded/photographic treatment the tile renders. */
+export type ProjectVisualKind =
+  | "pubcam"
+  | "tally"
+  | "kingswood"
+  | "scaffold"
+  | "seatview";
+
+export type ProjectShot = {
+  src: string;
+  alt: string;
+  /**
+   * CSS aspect-ratio of the frame. Setting it shorter than the source's true
+   * ratio crops the capture — used with `position` to trim damaged edges.
+   */
+  aspect: string;
+  /** object-position inside the frame, e.g. "50% 100%" to crop off the top. */
+  position?: string;
+  /** Phone width as a fraction of the tile, e.g. "56%". */
+  width?: string;
+};
 
 export type Project = {
-  /** Stable slug — also used as the DOM id of the project block. */
-  id: string;
+  slug: string;
   index: string;
   name: string;
-  layout: ProjectLayout;
-  aspect: ProjectAspect;
-  category: string;
-  description: string;
-  capabilities: readonly string[];
+  /** One-line description shown on reel cards. */
+  tagline: string;
+  /** Service tags, rendered as a quiet row. */
+  tags: readonly string[];
+  /** Honest status line — no invented metrics. */
   status: string;
-  /** Live status marks the block with an active indicator. */
-  isLive?: boolean;
   /**
-   * Public destination for the project. Left null until a live URL or case
-   * study page exists — the showcase falls back to a direct enquiry link.
+   * Case-study destination. Null until those pages exist; the UI then falls
+   * back to an enquiry link rather than a dead route.
    */
   href: string | null;
+  visual: ProjectVisualKind;
+  /** Real product capture, when one exists in the product's own repo. */
+  shot?: ProjectShot;
   /**
-   * Optional screenshot. Drop a file in /public and set the path here to
-   * replace the coded placeholder visual with a real product image.
+   * Alternative capture for small tile contexts (reel cards, hero window),
+   * where the featured shot's composition doesn't crop well.
    */
-  image: string | null;
-  /** Alt text used for the image, and as the accessible label for the placeholder. */
-  imageAlt: string;
-  visual: ProjectVisual;
+  tileShot?: ProjectShot;
+  /** Featured in the editorial selected-work section. */
+  featured?: {
+    headline: string;
+  };
+  /** Accessible description of the tile as a whole. */
+  alt: string;
 };
 
 export const projects: readonly Project[] = [
   {
-    id: "pubcam",
+    slug: "pubcam",
     index: "01",
     name: "PubCam",
-    layout: "standard",
-    aspect: "wide",
-    category: "Consumer application / Nightlife technology",
-    description:
-      "A live nightlife discovery platform helping users see venue activity, events and crowd conditions before they arrive.",
-    capabilities: [
-      "Mobile application",
-      "Venue discovery",
-      "Live nightlife information",
-      "Events",
-      "Rewards",
-      "Venue partnerships",
-    ],
+    tagline: "Nightlife discovery platform",
+    tags: ["Strategy", "Brand", "Mobile", "Web"],
     status: "Live on the App Store",
-    isLive: true,
     href: null,
-    image: null,
-    imageAlt:
-      "PubCam mobile application showing live venue activity, crowd levels and nearby events",
     visual: "pubcam",
+    shot: {
+      src: "/work/pubcam-venue.png",
+      alt: "PubCam venue screen for The Grand Hotel with a live crowd-level pill and recent clips",
+      aspect: "574 / 1006",
+    },
+    featured: {
+      headline: "Reimagining how people discover nightlife.",
+    },
+    alt: "PubCam mobile app screen on a dark tile",
   },
   {
-    id: "meridian-ai",
+    slug: "tally-tax",
     index: "02",
-    name: "Meridian AI",
-    layout: "bleed",
-    aspect: "classic",
-    category: "Computer vision / Venue intelligence",
-    description:
-      "An AI analytics platform designed to measure occupancy, dwell time, queue activity, peak periods and venue performance.",
-    capabilities: [
-      "Computer vision",
-      "Headcount",
-      "Dwell-time analytics",
-      "Queue intelligence",
-      "Forecasting",
-      "Operational dashboards",
-    ],
-    status: "In development",
-    href: null,
-    image: null,
-    imageAlt:
-      "Meridian AI dashboard showing computer vision detection zones and occupancy analytics for a venue",
-    visual: "meridian",
-  },
-  {
-    id: "tally-tax",
-    index: "03",
     name: "Tally Tax",
-    layout: "standard",
-    aspect: "tall",
-    category: "Consumer fintech / Tax software",
-    description:
-      "A tax application designed to help younger Australians track expenses, understand deductions and prepare for tax time.",
-    capabilities: [
-      "Receipt scanning",
-      "Expense classification",
-      "Guided tax workflows",
-      "Consumer education",
-      "Mobile product design",
-    ],
+    tagline: "A simpler tax experience for young Australians",
+    tags: ["Product", "Mobile", "AI"],
     status: "App Store submission",
     href: null,
-    image: null,
-    imageAlt:
-      "Tally Tax application showing a scanned receipt being classified into deduction categories",
     visual: "tally",
+    shot: {
+      src: "/work/tally-profile.png",
+      alt: "Tally profile screen showing tax profile completion and account details",
+      // The source capture starts mid-title, so the frame is set shorter and
+      // bottom-anchored to crop the damaged strip off the top.
+      aspect: "776 / 1524",
+      position: "50% 100%",
+      width: "56%",
+    },
+    featured: {
+      headline: "Making tax feel simple, understandable and less intimidating.",
+    },
+    alt: "Tally Tax mobile app screen on a light tile",
   },
   {
-    id: "skel-scaff-systems",
-    index: "04",
-    name: "Skel Scaff Systems",
-    layout: "bleed",
-    aspect: "panorama",
-    category: "Operations / Business automation",
-    description:
-      "Internal systems and workflow automation designed to reduce repetitive administration across quoting, projects, task creation and operations.",
-    capabilities: [
-      "Workflow automation",
-      "Internal tools",
-      "Operations systems",
-      "Project setup",
-      "Process design",
-    ],
-    status: "Client systems",
-    href: null,
-    image: null,
-    imageAlt:
-      "Skel Scaff Systems workflow automation diagram connecting quoting, project setup and task creation",
-    visual: "skelscaff",
-  },
-  {
-    id: "kingswood",
-    index: "05",
+    slug: "kingswood",
+    index: "03",
     name: "Kingswood",
-    layout: "full",
-    aspect: "cinema",
-    category: "Music / Digital experience",
-    description:
-      "A high-impact website experience for the Australian rock band Kingswood, designed around music, touring, identity and visual storytelling.",
-    capabilities: [
-      "Website design",
-      "Frontend development",
-      "Music integration",
-      "Tour information",
-      "Content system",
-    ],
+    tagline: "Digital home for an Australian rock band",
+    tags: ["Brand", "Web", "Experience"],
     status: "In development",
     href: null,
-    image: null,
-    imageAlt:
-      "Kingswood website experience showing typographic tour listing and music player interface",
     visual: "kingswood",
+    shot: {
+      src: "/work/kingswood-hero.jpg",
+      alt: "Black-and-white photograph of a dirt road cutting through hills, from the Kingswood site",
+      aspect: "2400 / 1350",
+    },
+    // The motion-blur road reads as noise at card size; the band portrait
+    // crops far better in a 4:5 tile.
+    tileShot: {
+      src: "/work/kingswood-portrait.jpg",
+      alt: "Kingswood band portrait in black and white",
+      aspect: "1600 / 1200",
+    },
+    featured: {
+      headline: "Building a digital experience worthy of the band’s live presence.",
+    },
+    alt: "Kingswood band photography",
+  },
+  {
+    slug: "scaffold-visualiser",
+    index: "04",
+    name: "Scaffold Visualiser",
+    tagline: "Faster planning and visualisation for scaffold projects",
+    tags: ["Product", "3D", "Web"],
+    status: "In development",
+    href: null,
+    visual: "scaffold",
+    alt: "Abstract scaffold elevation drawing with a cobalt dimension line",
+  },
+  {
+    slug: "seat-view",
+    index: "05",
+    name: "Seat View",
+    tagline: "Interactive 3D cinema seat-selection software",
+    tags: ["Product", "3D", "SaaS"],
+    status: "In development",
+    href: null,
+    visual: "seatview",
+    alt: "Abstract cinema seat map with three selected seats highlighted in cobalt",
   },
 ];
+
+export const featuredProjects = projects.filter(
+  (project) => project.featured,
+);

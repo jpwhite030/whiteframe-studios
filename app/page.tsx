@@ -1,25 +1,27 @@
-import { Header } from "@/components/header";
+import { Navigation } from "@/components/navigation";
 import { Hero } from "@/components/hero";
-import { Studio } from "@/components/studio";
-import { ProjectShowcase } from "@/components/project-showcase";
-import { Services } from "@/components/services";
-import { Process } from "@/components/process";
+import { ProjectReel } from "@/components/project-reel";
+import { StudioStatement } from "@/components/studio-statement";
+import { SelectedWork } from "@/components/selected-work";
+import { Capabilities } from "@/components/capabilities";
 import { Founder } from "@/components/founder";
-import { ContactForm } from "@/components/contact-form";
+import { Process } from "@/components/process";
+import { FinalCta } from "@/components/final-cta";
 import { Footer } from "@/components/footer";
 
 export default function Home() {
   return (
     <>
-      <Header />
+      <Navigation />
       <main id="main" className="flex-1">
         <Hero />
-        <Studio />
-        <ProjectShowcase />
-        <Services />
-        <Process />
+        <ProjectReel />
+        <StudioStatement />
+        <SelectedWork />
+        <Capabilities />
         <Founder />
-        <ContactForm />
+        <Process />
+        <FinalCta />
       </main>
       <Footer />
     </>

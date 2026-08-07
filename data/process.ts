@@ -7,25 +7,24 @@ export type ProcessStage = {
 export const processStages: readonly ProcessStage[] = [
   {
     step: "01",
-    title: "Understand",
+    title: "Define",
     description:
-      "Clarify the problem, users, commercial goals and current workflow.",
+      "Understand the problem, the users and the commercial goal — then agree the smallest product worth building.",
   },
   {
     step: "02",
-    title: "Scope",
+    title: "Design",
     description:
-      "Define the smallest valuable product and remove unnecessary complexity.",
+      "Brand, interface and interaction design, prototyped until it feels obvious.",
   },
   {
     step: "03",
     title: "Build",
-    description:
-      "Design and develop the product through focused, testable releases.",
+    description: "Production engineering in short, visible releases.",
   },
   {
     step: "04",
     title: "Launch",
-    description: "Deploy, measure real usage and improve based on feedback.",
+    description: "Ship, measure real usage and keep improving.",
   },
 ];

@@ -1,36 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Archivo,
-  Instrument_Sans,
-  Instrument_Serif,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Manrope } from "next/font/google";
+import { CustomCursor } from "@/components/custom-cursor";
 import { MotionProvider } from "@/components/motion-provider";
+import { LenisProvider } from "@/lib/lenis-provider";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
-const archivo = Archivo({
-  variable: "--font-archivo",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const instrumentSans = Instrument_Sans({
-  variable: "--font-instrument-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-mono-jetbrains",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
   display: "swap",
 });
@@ -69,8 +46,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f0e0c",
-  colorScheme: "dark",
+  themeColor: "#f3f1eb",
+  colorScheme: "light",
 };
 
 /** ProfessionalService structured data for the studio. */
@@ -95,10 +72,10 @@ const structuredData = {
   areaServed: "Worldwide",
   knowsAbout: [
     "Software development",
+    "Product strategy",
+    "Brand and interface design",
     "Artificial intelligence",
     "Workflow automation",
-    "Product strategy",
-    "Computer vision",
   ],
   sameAs: siteConfig.socials.map((social) => social.href),
 };
@@ -107,24 +84,24 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en-AU"
-      className={`${archivo.variable} ${instrumentSans.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} h-full`}
-    >
+    <html lang="en-AU" className={`${manrope.variable} h-full`}>
       <head>
         {/* Without JavaScript nothing may stay hidden behind an entrance. */}
         <noscript>
-          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important;clip-path:none!important}`}</style>
         </noscript>
       </head>
-      <body className="flex min-h-full flex-col bg-canvas text-bone">
+      <body className="flex min-h-full flex-col bg-cream text-ink">
         <a
           href="#main"
-          className="label sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:bg-bone focus:px-4 focus:py-3 focus:text-canvas"
+          className="label sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:bg-ink focus:px-4 focus:py-3 focus:text-light"
         >
           Skip to content
         </a>
-        <MotionProvider>{children}</MotionProvider>
+        <LenisProvider>
+          <MotionProvider>{children}</MotionProvider>
+        </LenisProvider>
+        <CustomCursor />
         <div aria-hidden className="grain" />
         <script
           type="application/ld+json"

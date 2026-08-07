@@ -1,64 +1,62 @@
 "use client";
 
-import { motion } from "motion/react";
-import { SectionHeading } from "@/components/section-heading";
+import { useRef } from "react";
+import { motion, useScroll, useSpring } from "motion/react";
 import { Reveal } from "@/components/reveal";
 import { processStages } from "@/data/process";
 
-/** Each stage hangs further below the rule than the last, so the row descends. */
-const drops = ["lg:pt-10", "lg:pt-24", "lg:pt-38", "lg:pt-52"];
-
+/**
+ * Four-stage process as an editorial timeline. A cobalt rule scrubs across
+ * with scroll; stages reveal in sequence. Vertical on small screens.
+ */
 export function Process() {
-  return (
-    <section id="process" className="shell scroll-mt-24 py-28 md:py-36 lg:py-44">
-      <SectionHeading
-        number="04"
-        label="Process"
-        headline="A direct path from idea to launch."
-        variant="margin"
-      />
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.8", "end 0.55"],
+  });
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.5,
+  });
 
-      <div className="relative mt-20 md:mt-28">
-        {/* Timeline rule — drawn only once all four stages sit on one row. */}
+  return (
+    <section className="shell scroll-mt-20 py-28 md:py-40">
+      <p className="label text-ink-faint">Process</p>
+      <h2 className="mt-5 max-w-3xl text-[clamp(1.9rem,3.6vw,3.25rem)]">
+        A direct path from idea to launch.
+      </h2>
+
+      <div ref={ref} className="relative mt-14 md:mt-20">
+        {/* The rule: static track plus scroll-scrubbed cobalt fill. */}
         <span
           aria-hidden
-          className="absolute top-0 left-0 hidden h-px w-full bg-line lg:block"
+          className="absolute top-0 left-0 hidden h-px w-full bg-ink/15 lg:block"
         />
         <motion.span
           aria-hidden
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true, margin: "0px 0px -20% 0px" }}
-          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute top-0 left-0 hidden h-px w-full origin-left bg-bone lg:block"
+          style={{ scaleX: progress }}
+          className="absolute top-0 left-0 hidden h-px w-full origin-left bg-cobalt lg:block"
         />
 
-        <ol className="grid gap-x-10 md:grid-cols-2 lg:grid-cols-4 lg:items-start">
+        <ol className="grid gap-x-10 md:grid-cols-2 lg:grid-cols-4">
           {processStages.map((stage, index) => (
             <Reveal
               as="li"
               key={stage.step}
-              delay={index * 0.07}
-              className={`relative border-t border-line pt-7 pb-9 lg:border-t-0 lg:pr-12 lg:pb-0 ${drops[index]}`}
+              delay={index * 0.08}
+              className="relative border-t border-ink/10 py-7 md:py-8 lg:border-t-0 lg:pt-10 lg:pr-10"
             >
-              {/* Node, and the line dropping from the rule to this stage. */}
               <span
                 aria-hidden
-                className="absolute top-0 left-0 hidden size-1.5 -translate-y-[3px] rounded-full bg-bone lg:block"
+                className="absolute top-0 left-0 hidden size-1.5 -translate-y-[3px] rounded-full bg-ink lg:block"
               />
-              <span
-                aria-hidden
-                className="absolute top-0 left-[2.5px] hidden w-px bg-line lg:block"
-                style={{ height: `calc(${2.5 + index * 3.5}rem)` }}
-              />
-
-              <div className="flex items-baseline gap-4">
-                <span className="label text-accent">{stage.step}</span>
-                <h3 className="font-display text-2xl leading-none font-semibold tracking-[-0.03em] md:text-[1.75rem]">
-                  {stage.title}
-                </h3>
-              </div>
-              <p className="mt-4 max-w-sm text-base leading-relaxed text-muted md:mt-6">
+              <span className="label text-cobalt">{stage.step}</span>
+              <h3 className="mt-4 text-2xl font-extrabold tracking-tight md:text-[1.7rem]">
+                {stage.title}
+              </h3>
+              <p className="mt-3.5 max-w-sm text-base leading-relaxed font-medium text-ink-soft">
                 {stage.description}
               </p>
             </Reveal>

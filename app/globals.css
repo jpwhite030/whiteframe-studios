@@ -1,50 +1,36 @@
 @import "tailwindcss";
 
 @theme {
-  /* Canvas — warm near-black, with two raised steps. */
-  --color-canvas: #0f0e0c;
-  --color-canvas-100: #171613;
-  --color-canvas-200: #201e1a;
+  /* Warm monochrome foundation. Colour comes from the product tiles. */
+  --color-cream: #f3f1eb;
+  --color-cream-100: #eae7df;
+  --color-ink: #0d0d0d;
+  --color-ink-soft: #57544e;
+  --color-ink-faint: #8b877e;
 
-  /* Text on canvas */
-  --color-bone: #f4f1ea;
-  --color-bone-700: #cbc6bc;
-  --color-muted: #928c81;
-  --color-faint: #6a655c;
+  /* Dark bands */
+  --color-dark: #0a0a0a;
+  --color-dark-100: #141412;
+  --color-light: #f5f3ee;
+  --color-light-soft: #a7a49c;
+  --color-light-faint: #6e6b64;
 
-  /* Structure */
-  --color-line: #2b2926;
-  --color-line-strong: #423f3a;
+  /* Single accent */
+  --color-cobalt: #315cff;
+  --color-cobalt-600: #2547d0;
 
-  /* Light surfaces — used by the product panels, which read as lit screens. */
-  --color-paper: #f4f1ea;
-  --color-paper-100: #ece8df;
-  --color-paper-200: #e2ddd2;
-  --color-ink: #14130f;
-  --color-ink-700: #45423b;
-  --color-ink-faint: #8d887e;
-  --color-paper-line: #d4cfc4;
-
-  /* One accent. Bright enough to carry text on the canvas. */
-  --color-accent: #7189ff;
-  --color-accent-deep: #3b54e0;
-
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
-  --font-mono: var(--font-mono-jetbrains), ui-monospace, monospace;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
   :root {
-    --header-height: 4.25rem;
-    color-scheme: dark;
+    --header-height: 4.5rem;
   }
 
   * {
-    border-color: var(--color-line);
+    border-color: color-mix(in oklab, var(--color-ink) 10%, transparent);
   }
 
   html {
@@ -53,9 +39,21 @@
     -webkit-text-size-adjust: 100%;
   }
 
+  /* Lenis owns scrolling when active. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
   body {
-    background-color: var(--color-canvas);
-    color: var(--color-bone);
+    background-color: var(--color-cream);
+    color: var(--color-ink);
     font-family: var(--font-sans);
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
@@ -66,10 +64,9 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 0.96;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
     text-wrap: balance;
   }
 
@@ -78,14 +75,14 @@
   }
 
   ::selection {
-    background-color: var(--color-accent);
-    color: var(--color-canvas);
+    background-color: var(--color-cobalt);
+    color: var(--color-light);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-cobalt);
     outline-offset: 3px;
-    border-radius: 1px;
+    border-radius: 2px;
   }
 
   input,
@@ -94,21 +91,6 @@
   button {
     font: inherit;
     color: inherit;
-  }
-
-  select {
-    appearance: none;
-  }
-
-  /* Dark canvas, light option list — keep the native menu readable. */
-  select option {
-    background-color: var(--color-canvas-100);
-    color: var(--color-bone);
-  }
-
-  input::placeholder,
-  textarea::placeholder {
-    color: var(--color-faint);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -130,43 +112,36 @@
 @utility shell {
   width: 100%;
   margin-inline: auto;
-  max-width: 96rem;
+  max-width: 100rem;
   padding-inline: 1.375rem;
 
   @media (width >= 48rem) {
-    padding-inline: 2.5rem;
+    padding-inline: 2.75rem;
   }
 
   @media (width >= 80rem) {
-    padding-inline: 4rem;
+    padding-inline: 4.5rem;
   }
 
-  @media (width >= 100rem) {
-    padding-inline: 5rem;
+  @media (width >= 105rem) {
+    padding-inline: 6rem;
   }
 }
 
-/* Small monospaced label used for section numbers, eyebrows and meta. */
+/* Small uppercase label used for eyebrows, tags and meta. */
 @utility label {
-  font-family: var(--font-mono);
   font-size: 0.6875rem;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   line-height: 1;
 }
 
-/* Hairline column grid, used inside light panels. */
-@utility rule-grid {
-  background-image: linear-gradient(
-    to right,
-    var(--color-paper-line) 0 1px,
-    transparent 1px 100%
-  );
-  background-size: calc(100% / 3) 100%;
-
-  @media (width >= 48rem) {
-    background-size: calc(100% / 6) 100%;
+/* Hidden scrollbar for the drag reel — native scrolling stays intact. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -176,6 +151,6 @@
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.04;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
