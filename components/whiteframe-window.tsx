@@ -9,7 +9,7 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { projects } from "@/data/projects";
+import { projects, type Project } from "@/data/projects";
 
 /**
  * The Whiteframe Window — the brand object. A literal white frame holding
@@ -19,7 +19,45 @@ import { projects } from "@/data/projects";
  *
  * Reduced motion renders it perfectly still; on touch, dragging still works
  * but nothing depends on it.
+ *
+ * The two devices sit upright on a shared baseline and are separated by
+ * scale, elevation and shadow rather than by rotation. Opposing tilts read
+ * as scattered snapshots; a held grid reads as a considered composition.
  */
+
+/**
+ * A capture presented as a device rather than a pasted rectangle: dark
+ * bezel, correct inner radius, and a shadow that puts it in the space.
+ * Both products get identical treatment so the pair reads as one system.
+ */
+function Device({
+  shot,
+  sizes,
+  priority = false,
+}: {
+  shot: NonNullable<Project["shot"]>;
+  sizes: string;
+  priority?: boolean;
+}) {
+  return (
+    <div className="rounded-[1.6rem] bg-[#0d0d0d] p-[0.35rem] ring-1 ring-black/5">
+      <div
+        className="relative overflow-hidden rounded-[1.3rem]"
+        style={{ aspectRatio: shot.aspect }}
+      >
+        <Image
+          src={shot.src}
+          alt={shot.alt}
+          fill
+          priority={priority}
+          sizes={sizes}
+          className="object-cover"
+          style={{ objectPosition: shot.position ?? "50% 0%" }}
+        />
+      </div>
+    </div>
+  );
+}
 export function WhiteframeWindow({ className = "" }: { className?: string }) {
   const reduceMotion = useReducedMotion();
 
@@ -31,12 +69,12 @@ export function WhiteframeWindow({ className = "" }: { className?: string }) {
   const rotateY = useTransform(sx, [-1, 1], [-2.6, 2.6]);
   const rotateX = useTransform(sy, [-1, 1], [2, -2]);
 
-  const frontX = useTransform(sx, [-1, 1], [-14, 14]);
-  const frontY = useTransform(sy, [-1, 1], [-8, 8]);
-  const midX = useTransform(sx, [-1, 1], [-7, 7]);
-  const midY = useTransform(sy, [-1, 1], [-4, 4]);
-  const backX = useTransform(sx, [-1, 1], [4, -4]);
-  const backY = useTransform(sy, [-1, 1], [2, -2]);
+  // Depth reads correctly when nearer layers travel further in the *same*
+  // direction. The old back layer counter-travelled, which fought the tilt.
+  const frontX = useTransform(sx, [-1, 1], [-12, 12]);
+  const frontY = useTransform(sy, [-1, 1], [-7, 7]);
+  const backX = useTransform(sx, [-1, 1], [-5, 5]);
+  const backY = useTransform(sy, [-1, 1], [-3, 3]);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -68,7 +106,7 @@ export function WhiteframeWindow({ className = "" }: { className?: string }) {
       whileDrag={{ scale: 0.985 }}
       className={`relative cursor-grab touch-none rounded-3xl border border-ink/12 bg-white shadow-[0_48px_120px_rgba(13,13,13,0.14)] select-none active:cursor-grabbing ${className}`}
       role="img"
-      aria-label="The Whiteframe Window: layered previews of PubCam, Tally Tax and Scaffold Visualiser"
+      aria-label="The Whiteframe Window: layered device previews of PubCam and Tally Tax"
     >
       {/* Frame chrome */}
       <div className="flex items-center justify-between border-b border-ink/8 px-5 py-3.5">
@@ -79,63 +117,33 @@ export function WhiteframeWindow({ className = "" }: { className?: string }) {
         <span className="label text-ink-faint">Selected work 01–05</span>
       </div>
 
-      <div className="relative aspect-[4/3] overflow-hidden rounded-b-3xl">
-        {/* Back — scaffold drawing, faint */}
-        <motion.div
+      <div className="relative aspect-[4/3] overflow-hidden rounded-b-3xl bg-gradient-to-b from-[#f7f6f3] to-[#eceae5]">
+        {/* A soft horizon, so the devices stand on a surface rather than
+            float on flat white. */}
+        <div
           aria-hidden
-          style={reduceMotion ? undefined : { x: backX, y: backY }}
-          className="absolute top-[8%] right-[-4%] h-[52%] w-[54%] overflow-hidden rounded-xl border border-ink/8 bg-[#fbfaf7] opacity-80"
-        >
-          <svg
-            className="absolute inset-[10%] h-[80%] w-[80%]"
-            viewBox="0 0 200 140"
-            fill="none"
-            aria-hidden
-          >
-            <g stroke="#0d0d0d" strokeOpacity="0.24" strokeWidth="1.25">
-              <path d="M20 10 V130 M90 10 V130 M160 10 V130" />
-            </g>
-            <g stroke="#0d0d0d" strokeOpacity="0.16" strokeWidth="1">
-              <path d="M20 40 H160 M20 85 H160" />
-              <path d="M20 85 L90 40 M90 85 L160 40" />
-            </g>
-            <path d="M20 22 H160" stroke="#315cff" strokeWidth="1.25" />
-          </svg>
-        </motion.div>
+          className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-ink/[0.06] to-transparent"
+        />
 
-        {/* Mid — Tally phone */}
+        {/* Back — Tally, set back and smaller. */}
         <motion.div
-          style={reduceMotion ? undefined : { x: midX, y: midY }}
-          className="absolute top-[16%] right-[10%] w-[34%] rotate-[5deg] overflow-hidden rounded-[1rem] border border-ink/10 shadow-[0_1.5rem_3rem_rgba(13,13,13,0.18)]"
+          style={reduceMotion ? undefined : { x: backX, y: backY }}
+          className="absolute top-[11%] right-[11%] w-[36%] drop-shadow-[0_1.25rem_2.5rem_rgba(13,13,13,0.16)]"
         >
-          <div className="relative" style={{ aspectRatio: tally.shot!.aspect }}>
-            <Image
-              src={tally.shot!.src}
-              alt={tally.shot!.alt}
-              fill
-              sizes="(min-width: 1024px) 16vw, 32vw"
-              className="object-cover"
-              style={{ objectPosition: tally.shot!.position ?? "50% 0%" }}
-            />
-          </div>
+          <Device shot={tally.shot!} sizes="(min-width: 1024px) 16vw, 32vw" />
         </motion.div>
 
-        {/* Front — PubCam phone, bleeding off the bottom */}
+        {/* Front — PubCam, larger and lower, overlapping the Tally device.
+            Both run off the bottom edge together, on one baseline. */}
         <motion.div
           style={reduceMotion ? undefined : { x: frontX, y: frontY }}
-          className="absolute bottom-[-14%] left-[10%] w-[38%] rotate-[-4deg] overflow-hidden rounded-[1.1rem] shadow-[0_2.5rem_5rem_rgba(13,13,13,0.32)]"
+          className="absolute top-[22%] left-[12%] w-[44%] drop-shadow-[0_2rem_3.5rem_rgba(13,13,13,0.3)]"
         >
-          <div className="relative" style={{ aspectRatio: pubcam.shot!.aspect }}>
-            <Image
-              src={pubcam.shot!.src}
-              alt={pubcam.shot!.alt}
-              fill
-              priority
-              sizes="(min-width: 1024px) 18vw, 36vw"
-              className="object-cover"
-              style={{ objectPosition: pubcam.shot!.position ?? "50% 0%" }}
-            />
-          </div>
+          <Device
+            shot={pubcam.shot!}
+            sizes="(min-width: 1024px) 18vw, 36vw"
+            priority
+          />
         </motion.div>
       </div>
     </motion.div>
