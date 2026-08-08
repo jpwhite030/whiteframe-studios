@@ -620,6 +620,33 @@ export const projects: readonly Project[] = [
         "macOS companion application",
         "Widgets and Live Activity",
       ],
+      // Captured from a Release build on an iPhone 17 simulator.
+      gallery: [
+        {
+          src: "/work/still-session-v1.png",
+          alt: "A completed Still session scored 100, listing total duration, protected focus, longest unbroken block, pauses and interruptions",
+          aspect: "900 / 1956",
+          hasStatusBar: true,
+          caption:
+            "A session opened up: the score is not a badge but a summary of what was measured — unbroken time, pauses, interruptions, whether the intention was met.",
+        },
+        {
+          src: "/work/still-history-v1.png",
+          alt: "Still's history screen showing hours protected this week, average stillness, a seven-day chart and a list of named sessions",
+          aspect: "900 / 1956",
+          hasStatusBar: true,
+          caption:
+            "History is a record of work done rather than minutes elapsed, because each session carries the name of what it was for.",
+        },
+        {
+          src: "/work/still-settings-v1.png",
+          alt: "Still's settings screen with haptics, completion sounds, default duration, notification permission and appearance options",
+          aspect: "900 / 1956",
+          hasStatusBar: true,
+          caption:
+            "Settings stays short. A product about protecting attention has no business spending it on configuration.",
+        },
+      ],
       relatedServices: ["product-strategy", "product-design", "software-development"],
     },
     alt: "Still mobile app screen on a dark tile",
