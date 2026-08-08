@@ -457,6 +457,22 @@ export const projects: readonly Project[] = [
             "The assistant answers from your own records and the published ATO rules, and labels every figure as confirmed or an estimate — the line between help and advice, drawn in the interface.",
         },
         {
+          src: "/work/tally-occupation-v1.png",
+          alt: "Tally's tax profile asking what you do for work, with occupation options from retail and trades to teaching and delivery, one selected",
+          aspect: "900 / 1956",
+          hasStatusBar: true,
+          caption:
+            "Occupation is asked first because deduction relevance falls out of it — everything downstream can then be narrowed to what actually applies.",
+        },
+        {
+          src: "/work/tally-profile-questions-v1.png",
+          alt: "Tally asking employment type and expected earnings in plain language, with options such as casual, gig or freelance, and income bands",
+          aspect: "900 / 1956",
+          hasStatusBar: true,
+          caption:
+            "The profile is written as questions a person can answer — \u201croughly what will you earn this year?\u201d — rather than as the schedule references the tax system uses.",
+        },
+        {
           src: "/work/tally-tax-summary-v1.png",
           alt: "Tally's tax summary listing readiness by category — vehicle, working from home, travel, clothing and tools — each with its own completion percentage",
           aspect: "900 / 1956",
