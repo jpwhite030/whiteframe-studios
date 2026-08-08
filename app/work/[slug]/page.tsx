@@ -5,8 +5,9 @@ import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { FinalCta } from "@/components/final-cta";
 import { JsonLd } from "@/components/json-ld";
-import { ProjectTile } from "@/components/project-tile";
+import { ProjectTile, projectGround } from "@/components/project-tile";
 import { CaseStudyGallery } from "@/components/case-study-gallery";
+import { LiveDemo } from "@/components/live-demo";
 import { Reveal } from "@/components/reveal";
 import { RevealImage } from "@/components/reveal-image";
 import { SmartLink } from "@/components/smart-link";
@@ -76,13 +77,28 @@ export default async function CaseStudyPage({
         <RevealImage className="shell">
           {/* Squarer than a 16:9 banner, because the subject is a phone: a
               wide box either crops the device or shrinks it to a sliver. */}
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl md:aspect-[3/2]">
-            <ProjectTile
-              project={project}
-              priority
-              fit="contain"
-              sizes="(min-width: 1024px) 76vw, 92vw"
-            />
+          <div
+            className={`relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl md:aspect-[3/2] ${
+              study.liveDemo ? `${projectGround(project.visual)} py-10` : ""
+            }`}
+          >
+            {study.liveDemo ? (
+              // The product itself leads, rather than a picture of it.
+              <LiveDemo
+                src={study.liveDemo.src}
+                poster={study.liveDemo.poster}
+                posterAlt={study.liveDemo.posterAlt}
+                aspect={study.liveDemo.aspect}
+                label={project.name}
+              />
+            ) : (
+              <ProjectTile
+                project={project}
+                priority
+                fit="contain"
+                sizes="(min-width: 1024px) 76vw, 92vw"
+              />
+            )}
           </div>
         </RevealImage>
 

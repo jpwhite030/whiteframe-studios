@@ -10,6 +10,26 @@ import type { Project } from "@/data/projects";
  */
 
 /**
+ * The product-cast ground each project sits on. Exported so a case-study
+ * hero can put something else — a live embed — on the same surface without
+ * the colour being defined twice.
+ */
+export function projectGround(visual: Project["visual"]): string {
+  switch (visual) {
+    case "pubcam":
+      return "bg-[#17121f]";
+    case "tally":
+      return "bg-[#e9efdb]";
+    case "still":
+      return "bg-[#1a1a1c]";
+    case "kingswood":
+      return "bg-dark";
+    default:
+      return "bg-[#f2f0eb]";
+  }
+}
+
+/**
  * The phone silhouette both stills and recordings are presented in.
  *
  * `fit` decides which dimension drives the size, and it matters because a

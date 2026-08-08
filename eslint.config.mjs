@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Static assets are served verbatim and are not ours to lint — the
+    // embedded product demo alone is a multi-megabyte bundled file.
+    "public/**",
   ]),
 ]);
 

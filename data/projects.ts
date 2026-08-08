@@ -135,6 +135,17 @@ export type CaseStudy = {
    * a recording has `sources`, a still has `src`.
    */
   gallery?: readonly CaseStudyMedia[];
+  /**
+   * A static web export of the product itself, embedded so it can be used
+   * rather than watched. Optional: the section omits where absent.
+   */
+  liveDemo?: {
+    /** Entry URL under /public. */
+    src: string;
+    poster: string;
+    posterAlt: string;
+    aspect: string;
+  };
   /** Service slugs this project drew on. */
   relatedServices: readonly string[];
 };
@@ -204,6 +215,15 @@ export const projects: readonly Project[] = [
       src: "/work/pubcam-venue.png",
       alt: "PubCam venue screen for The Grand Hotel with a live crowd-level pill and recent clips",
       aspect: "574 / 1006",
+    },
+    // Cards use the onboarding opener rather than the venue detail: the
+    // wordmark and the one-line promise read at card size, where a venue
+    // screen's crowd pill and clip row do not.
+    tileShot: {
+      src: "/work/pubcam-intro-v1.png",
+      alt: "PubCam's opening screen: the wordmark over a darkened venue clip, headed \u201cKnow the vibe before you go\u201d",
+      aspect: "900 / 1956",
+      hasStatusBar: true,
     },
     // Recorded from the Release build on an iPhone 17 simulator, so there are
     // no dev overlays and the transitions run at full speed.
@@ -376,18 +396,6 @@ export const projects: readonly Project[] = [
       aspect: "900 / 1956",
       hasStatusBar: true,
     },
-    // WebM is roughly half the MP4 here — a flat interface with little motion
-    // is exactly what VP9 is good at, the opposite of PubCam's venue footage.
-    demo: {
-      sources: [
-        { src: "/work/tally-profile-demo-v1.webm", type: "video/webm" },
-        { src: "/work/tally-profile-demo-v1.mp4", type: "video/mp4" },
-      ],
-      poster: "/work/tally-profile-demo-poster-v1.jpg",
-      alt: "Building a Tally tax profile: choosing an occupation and an employment type, with the completion bar rising as each answer is given",
-      aspect: "576 / 1252",
-      hasStatusBar: true,
-    },
     featured: {
       headline: "Making tax feel simple, understandable and less intimidating.",
     },
@@ -453,6 +461,21 @@ export const projects: readonly Project[] = [
       // the app's own preview mode.
       gallery: [
         {
+          // WebM leads here at roughly half the MP4 size: a flat interface
+          // with little motion is what VP9 handles well, the opposite of
+          // PubCam's venue footage.
+          sources: [
+            { src: "/work/tally-profile-demo-v1.webm", type: "video/webm" },
+            { src: "/work/tally-profile-demo-v1.mp4", type: "video/mp4" },
+          ],
+          poster: "/work/tally-profile-demo-poster-v1.jpg",
+          alt: "Building a Tally tax profile: choosing an occupation and an employment type, with the completion bar rising as each answer is given",
+          aspect: "576 / 1252",
+          hasStatusBar: true,
+          caption:
+            "A profile being built: each answer moves the completion bar, which is the whole argument for treating an annual obligation as something resumable.",
+        },
+        {
           src: "/work/tally-home-v1.png",
           alt: "Tally's home screen with a scan-a-receipt action, a streak counter, a daily tax tip and a 79 per cent tax-readiness score",
           aspect: "900 / 1956",
@@ -501,6 +524,16 @@ export const projects: readonly Project[] = [
             "The paid tier is framed around what it removes — unlimited scanning, automatic trip tracking, export — rather than around feature counts.",
         },
       ],
+      // A real static export of the app, running against no backend.
+      liveDemo: {
+        src: "/tally-demo",
+        poster: "/work/tally-home-v1.png",
+        posterAlt:
+          "Tally's home screen, shown before the interactive demo is loaded",
+        // Matches the logical phone viewport the iframe is given, so the
+        // scaled app fills the screen with no letterboxing.
+        aspect: "390 / 844",
+      },
       relatedServices: [
         "product-strategy",
         "product-design",
