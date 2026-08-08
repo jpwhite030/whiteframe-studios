@@ -131,7 +131,10 @@ export function ProjectTile({
   priority?: boolean;
   context?: "feature" | "card";
 }) {
-  if (project.visual === "placeholder") {
+  // A project with no capture falls back to the placeholder whatever its
+  // declared treatment. That way a project can be added to the data before
+  // its screenshot exists without rendering a broken image.
+  if (project.visual === "placeholder" || !project.shot) {
     return <PlaceholderTile project={project} context={context} />;
   }
 
@@ -166,6 +169,22 @@ export function ProjectTile({
             <PhoneDemo demo={demo} />
           ) : (
             <PhoneShot shot={shot} sizes={sizes} priority={priority} />
+          )}
+        </div>
+      );
+
+    case "still":
+      return (
+        <div className="absolute inset-0 bg-[#1a1a1c]">
+          {demo ? (
+            <PhoneDemo demo={demo} edgeClass="border-white/12" />
+          ) : (
+            <PhoneShot
+              shot={shot}
+              sizes={sizes}
+              priority={priority}
+              edgeClass="border-white/12"
+            />
           )}
         </div>
       );

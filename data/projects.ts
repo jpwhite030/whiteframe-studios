@@ -12,6 +12,7 @@
 export type ProjectVisualKind =
   | "pubcam"
   | "tally"
+  | "still"
   | "kingswood"
   | "placeholder";
 
@@ -27,6 +28,12 @@ export type ProjectShot = {
   position?: string;
   /** Phone width as a fraction of the tile, e.g. "56%". */
   width?: string;
+  /**
+   * True when the capture is a full-device shot that already contains the
+   * status bar and island. The device frame then stops drawing its own —
+   * otherwise the two stack and the phone grows a second notch.
+   */
+  hasStatusBar?: boolean;
 };
 
 /**
@@ -50,6 +57,20 @@ export type ProjectDemo = {
   aspect: string;
   /** Width as a fraction of the tile, matching ProjectShot. */
   width?: string;
+  /**
+   * True for a full-device recording that already shows the status bar —
+   * simulator captures do. Stops the device frame drawing a second one.
+   */
+  hasStatusBar?: boolean;
+};
+
+/**
+ * One step of a product walkthrough: a screen, and a line saying what the
+ * person is looking at. Captions carry the argument — without them a
+ * walkthrough is just a slideshow of screens nobody can interpret.
+ */
+export type WalkthroughScreen = ProjectShot & {
+  caption: string;
 };
 
 export type Project = {
@@ -68,6 +89,11 @@ export type Project = {
    */
   href: string | null;
   visual: ProjectVisualKind;
+  /**
+   * Tone of the status bar drawn above the capture in a device frame. Match
+   * it to the app's own top edge — light apps take "light".
+   */
+  deviceTone?: "light" | "dark";
   /** Real product capture, when one exists in the product's own repo. */
   shot?: ProjectShot;
   /**
@@ -81,6 +107,12 @@ export type Project = {
    * never becomes five simultaneous videos.
    */
   demo?: ProjectDemo;
+  /**
+   * Ordered screens for the click-through walkthrough. Optional: with none
+   * set, the walkthrough falls back to the single `shot`, which still earns
+   * its place — the hero renders phones far too small to actually read.
+   */
+  walkthrough?: readonly WalkthroughScreen[];
   /** Featured in the editorial selected-work section. */
   featured?: {
     headline: string;
@@ -99,10 +131,23 @@ export const projects: readonly Project[] = [
     status: "Live on the App Store",
     href: null,
     visual: "pubcam",
+    deviceTone: "dark",
     shot: {
       src: "/work/pubcam-venue.png",
       alt: "PubCam venue screen for The Grand Hotel with a live crowd-level pill and recent clips",
       aspect: "574 / 1006",
+    },
+    // Recorded from the Release build on an iPhone 17 simulator, so there are
+    // no dev overlays and the transitions run at full speed.
+    demo: {
+      sources: [
+        { src: "/work/pubcam-onboarding.webm", type: "video/webm" },
+        { src: "/work/pubcam-onboarding.mp4", type: "video/mp4" },
+      ],
+      poster: "/work/pubcam-onboarding-poster.jpg",
+      alt: "PubCam's onboarding, stepping through live venue clips, crowd levels, the venue map, what's on, and posting a clip",
+      aspect: "640 / 1392",
+      hasStatusBar: true,
     },
     featured: {
       headline: "Reimagining how people discover nightlife.",
@@ -118,6 +163,7 @@ export const projects: readonly Project[] = [
     status: "App Store submission",
     href: null,
     visual: "tally",
+    deviceTone: "light",
     shot: {
       src: "/work/tally-profile.png",
       alt: "Tally profile screen showing tax profile completion and account details",
@@ -133,8 +179,29 @@ export const projects: readonly Project[] = [
     alt: "Tally Tax mobile app screen on a light tile",
   },
   {
-    slug: "kingswood",
+    slug: "still",
     index: "03",
+    name: "Still",
+    // Adjust freely — written from what the Today screen shows, not from
+    // any positioning you've settled on.
+    tagline: "Focus sessions that protect time for deep work",
+    tags: ["Product", "Mobile", "macOS"],
+    status: "In TestFlight",
+    href: null,
+    visual: "still",
+    shot: {
+      src: "/work/still-today.png",
+      alt: "Still's Today screen showing protected focus time, a stillness score and seven-day activity",
+      aspect: "1206 / 2622",
+      // Full-device capture — it carries its own status bar and island, so
+      // the device frame must not draw a second one.
+      hasStatusBar: true,
+    },
+    alt: "Still mobile app screen on a dark tile",
+  },
+  {
+    slug: "kingswood",
+    index: "04",
     name: "Kingswood",
     tagline: "Digital home for an Australian rock band",
     tags: ["Brand", "Web", "Experience"],
@@ -162,7 +229,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "scaffold-visualiser",
-    index: "04",
+    index: "05",
     name: "Scaffold Visualiser",
     tagline: "Faster planning and visualisation for scaffold projects",
     tags: ["Product", "3D", "Web"],
@@ -173,7 +240,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "seat-view",
-    index: "05",
+    index: "06",
     name: "Seat View",
     tagline: "Interactive 3D cinema seat-selection software",
     tags: ["Product", "3D", "SaaS"],
