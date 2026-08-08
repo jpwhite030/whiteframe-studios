@@ -457,6 +457,14 @@ export const projects: readonly Project[] = [
             "The assistant answers from your own records and the published ATO rules, and labels every figure as confirmed or an estimate — the line between help and advice, drawn in the interface.",
         },
         {
+          src: "/work/tally-tax-summary-v1.png",
+          alt: "Tally's tax summary listing readiness by category — vehicle, working from home, travel, clothing and tools — each with its own completion percentage",
+          aspect: "900 / 1956",
+          hasStatusBar: true,
+          caption:
+            "Readiness is tracked per deduction category rather than as one number, so what's missing is always attributable to a specific part of the return.",
+        },
+        {
           src: "/work/tally-plus-v1.png",
           alt: "Tally Plus subscription screen showing annual and monthly pricing in Australian dollars",
           aspect: "900 / 1956",
