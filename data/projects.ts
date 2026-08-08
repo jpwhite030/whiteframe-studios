@@ -376,6 +376,18 @@ export const projects: readonly Project[] = [
       aspect: "900 / 1956",
       hasStatusBar: true,
     },
+    // WebM is roughly half the MP4 here — a flat interface with little motion
+    // is exactly what VP9 is good at, the opposite of PubCam's venue footage.
+    demo: {
+      sources: [
+        { src: "/work/tally-profile-demo-v1.webm", type: "video/webm" },
+        { src: "/work/tally-profile-demo-v1.mp4", type: "video/mp4" },
+      ],
+      poster: "/work/tally-profile-demo-poster-v1.jpg",
+      alt: "Building a Tally tax profile: choosing an occupation and an employment type, with the completion bar rising as each answer is given",
+      aspect: "576 / 1252",
+      hasStatusBar: true,
+    },
     featured: {
       headline: "Making tax feel simple, understandable and less intimidating.",
     },
