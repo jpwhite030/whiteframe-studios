@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import type { ProjectDemo } from "@/data/projects";
 
@@ -22,12 +22,25 @@ export function ProductVideo({
   className = "",
   /** Poster only, no fetching, until the tile nears the viewport. */
   preload = "none",
+  /**
+   * Attach the poster immediately. On by default: deferring it saves nothing
+   * measurable (mobile LCP was fractionally *better* with posters eager) and
+   * leaves a black rectangle until scripts run — permanently, without them.
+   * Opt out only for a recording far enough down a page that its poster
+   * would genuinely compete with the initial paint.
+   */
+  posterPriority = true,
 }: {
   demo: ProjectDemo;
   className?: string;
   preload?: "none" | "metadata";
+  posterPriority?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
+  // The poster is fetched the moment it's set, even for a video far below
+  // the fold — which competes with the hero for bandwidth on a phone. It's
+  // attached only once the recording is near the viewport.
+  const [posterVisible, setPosterVisible] = useState(posterPriority);
   // Null until the preference is known, which is the same on the server and
   // on the first client render — so `manual` is false in both and hydration
   // never mismatches. It resolves immediately after mount.
@@ -38,10 +51,23 @@ export function ProductVideo({
     const el = ref.current;
     if (!el) return;
 
+    // Attach the poster as soon as the element is anywhere near the screen,
+    // whether or not playback is wanted.
+    const near = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setPosterVisible(true);
+          near.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    near.observe(el);
+
     if (reduceMotion) {
       // Preference can flip mid-session — stop anything already running.
       el.pause();
-      return;
+      return () => near.disconnect();
     }
 
     const observer = new IntersectionObserver(
@@ -58,13 +84,16 @@ export function ProductVideo({
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      near.disconnect();
+    };
   }, [reduceMotion]);
 
   return (
     <video
       ref={ref}
-      poster={demo.poster}
+      poster={posterVisible ? demo.poster : undefined}
       // Muted is what makes autoplay permissible at all; loop and inline
       // keep it from taking over the page or going fullscreen on iOS.
       muted

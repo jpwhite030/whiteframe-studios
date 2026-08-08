@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { ProjectTile } from "@/components/project-tile";
+import { SmartLink } from "@/components/smart-link";
 import { Reveal } from "@/components/reveal";
 import { RevealImage } from "@/components/reveal-image";
 import { featuredProjects, type Project } from "@/data/projects";
@@ -18,12 +19,14 @@ function enquiryHref(project: Project) {
 
 function CaseLink({ project }: { project: Project }) {
   return (
-    <a
+    <SmartLink
       href={project.href ?? enquiryHref(project)}
-      className="group/link inline-flex items-center gap-2 text-sm font-bold transition-colors duration-200 hover:text-cobalt"
+      className="group/link inline-flex min-h-11 items-center gap-2 text-sm font-bold transition-colors duration-200 hover:text-cobalt focus-visible:outline-2 focus-visible:outline-cobalt focus-visible:outline-offset-2"
     >
       <span className="relative">
-        {project.href ? "View project" : "Request details"}
+        {/* A case study is a real page now, so the link says what it opens
+            rather than offering to email something. */}
+        {project.caseStudy ? "View case study" : "Explore the project"}
         <span
           aria-hidden
           className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-cobalt transition-transform duration-300 ease-editorial group-hover/link:scale-x-100"
@@ -34,7 +37,7 @@ function CaseLink({ project }: { project: Project }) {
         strokeWidth={2}
         className="size-4 transition-transform duration-300 ease-editorial group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
       />
-    </a>
+    </SmartLink>
   );
 }
 
@@ -61,16 +64,23 @@ export function SelectedWork() {
   const [first, second, third] = featuredProjects;
 
   return (
-    <section aria-label="Selected work" className="py-10 md:py-16">
+    <section aria-labelledby="selected-work-heading" className="py-10 md:py-16">
+      {/* A real heading rather than an aria-label: the case headlines below
+          are h3s, and without an h2 between them and the page h1 the
+          document outline skips a level. */}
+      <h2 id="selected-work-heading" className="sr-only">
+        Selected work
+      </h2>
       {/* 01 — visual right */}
       <article className="shell grid items-center gap-x-14 gap-y-10 py-14 md:py-20 lg:grid-cols-12">
         <Reveal className="lg:col-span-4">
           <CaseMeta project={first} />
         </Reveal>
         <RevealImage className="lg:col-span-8">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl md:aspect-[16/10]">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl md:aspect-[3/2]">
             <ProjectTile
               project={first}
+              fit="contain"
               sizes="(min-width: 1024px) 62vw, 92vw"
             />
           </div>
@@ -80,9 +90,10 @@ export function SelectedWork() {
       {/* 02 — visual left */}
       <article className="shell grid items-center gap-x-14 gap-y-10 py-14 md:py-20 lg:grid-cols-12">
         <RevealImage className="order-2 lg:order-1 lg:col-span-8">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl md:aspect-[16/10]">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl md:aspect-[3/2]">
             <ProjectTile
               project={second}
+              fit="contain"
               sizes="(min-width: 1024px) 62vw, 92vw"
             />
           </div>

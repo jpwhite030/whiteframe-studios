@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { scrollToHash, useLenis } from "@/lib/lenis-provider";
+import { SmartLink } from "@/components/smart-link";
+import { useLenis } from "@/lib/lenis-provider";
 import { siteConfig } from "@/lib/site-config";
 
 /**
@@ -13,17 +14,19 @@ import { siteConfig } from "@/lib/site-config";
  */
 export function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false);
+  // mix-blend-difference guarantees contrast over solid light or dark, but
+  // over mid-tone photography it can land on a near-invisible grey. Once the
+  // page has scrolled at all, the header takes a solid ground instead so the
+  // links are legible whatever passes beneath them.
+  const [scrolled, setScrolled] = useState(false);
   const lenis = useLenis();
 
-  const go = useCallback(
-    (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-      if (!href.startsWith("#")) return;
-      event.preventDefault();
-      setMenuOpen(false);
-      scrollToHash(lenis, href);
-    },
-    [lenis],
-  );
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Lock the page and allow Escape to dismiss while the menu is open.
   useEffect(() => {
@@ -50,29 +53,34 @@ export function Navigation() {
       {/* Blending layer. mix-blend-difference only reaches the page when it
           sits on the fixed element itself — on a child of a fixed header it
           blends against the header's transparent backdrop and vanishes. */}
-      <header className="fixed inset-x-0 top-0 z-50 h-(--header-height) text-light mix-blend-difference">
+      <header
+        className={`fixed inset-x-0 top-0 z-50 h-(--header-height) transition-colors duration-300 ${
+          scrolled
+            ? "border-b border-ink/8 bg-cream/85 text-ink backdrop-blur-md"
+            : "text-light mix-blend-difference"
+        }`}
+      >
         <div className="shell flex h-full items-center justify-between gap-6">
-          <a
-            href="#top"
-            onClick={(event) => go(event, "#top")}
-            aria-label={`${siteConfig.name}, back to top`}
-            className="flex items-center gap-2.5 text-[15px] font-extrabold tracking-tight"
+          <SmartLink
+            href="/"
+            aria-label={`${siteConfig.name}, home`}
+            onNavigate={() => setMenuOpen(false)}
+            className="flex items-center gap-2.5 py-2 text-[15px] font-extrabold tracking-tight"
           >
             <span
               aria-hidden
               className="block size-2.5 border-[1.5px] border-current"
             />
             {siteConfig.wordmark}
-          </a>
+          </SmartLink>
 
           <div className="flex items-center gap-8">
             <nav aria-label="Primary" className="hidden md:block">
               <ul className="flex items-center gap-8">
                 {siteConfig.nav.map((item) => (
                   <li key={item.href}>
-                    <a
+                    <SmartLink
                       href={item.href}
-                      onClick={(event) => go(event, item.href)}
                       className="group relative inline-block py-2 text-sm font-semibold"
                     >
                       {item.label}
@@ -80,7 +88,7 @@ export function Navigation() {
                         aria-hidden
                         className="absolute bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-editorial group-hover:scale-x-100 group-focus-visible:scale-x-100"
                       />
-                    </a>
+                    </SmartLink>
                   </li>
                 ))}
               </ul>
@@ -122,13 +130,12 @@ export function Navigation() {
       {/* Non-blending layer: the cobalt CTA keeps its true colour. */}
       <div className="pointer-events-none fixed inset-x-0 top-0 z-50 hidden h-(--header-height) sm:block">
         <div className="shell flex h-full items-center justify-end">
-          <a
+          <SmartLink
             href={siteConfig.navCta.href}
-            onClick={(event) => go(event, siteConfig.navCta.href)}
-            className="pointer-events-auto rounded-full bg-cobalt px-5 py-2.5 text-sm font-bold text-light transition-colors duration-300 hover:bg-cobalt-600 max-md:mr-14"
+            className="pointer-events-auto min-h-11 rounded-full bg-cobalt px-5 py-3 text-sm font-bold text-light transition-colors duration-300 hover:bg-cobalt-600 focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2 max-md:mr-14"
           >
             {siteConfig.navCta.label}
-          </a>
+          </SmartLink>
         </div>
       </div>
 
@@ -157,9 +164,9 @@ export function Navigation() {
                     }}
                     className="border-b border-light/10"
                   >
-                    <a
+                    <SmartLink
                       href={item.href}
-                      onClick={(event) => go(event, item.href)}
+                      onNavigate={() => setMenuOpen(false)}
                       className="flex items-baseline justify-between py-6"
                     >
                       <span className="text-4xl font-extrabold tracking-tight">
@@ -168,7 +175,7 @@ export function Navigation() {
                       <span className="label text-light-faint">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                    </a>
+                    </SmartLink>
                   </motion.li>
                 ))}
               </ul>

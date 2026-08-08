@@ -50,10 +50,25 @@ function Device({
   draggingRef: React.RefObject<boolean>;
 }) {
   const shot = project.shot!;
-  // A recording takes the screen where one exists; the still stays on as its
-  // poster, so the device is never empty while the video loads.
   const demo = project.demo;
-  const source = demo ?? shot;
+
+  // A recording plays on larger screens only. On a phone it was the LCP
+  // element — the poster had to arrive before the hero could paint, costing
+  // about a second on a throttled connection — and autoplaying video there
+  // spends someone's data for decoration. Rendering the still by default
+  // also means the server-rendered markup carries an optimised, responsive
+  // image rather than a video element, so the first paint is the cheap one.
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 768px)");
+    const update = () => setWide(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  const playing = demo && wide;
+  const source = playing ? demo : shot;
 
   return (
     <button
@@ -74,8 +89,8 @@ function Device({
         statusTone={project.deviceTone}
         className="transition-transform duration-500 ease-editorial group-hover/device:-translate-y-1"
       >
-        {demo ? (
-          <ProductVideo demo={demo} preload="metadata" />
+        {playing ? (
+          <ProductVideo demo={demo!} preload="metadata" />
         ) : (
           <Image
             src={shot.src}

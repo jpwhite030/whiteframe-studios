@@ -9,23 +9,43 @@ import type { Project } from "@/data/projects";
  * than borrowing an invented one. The parent sets size, radius and overflow.
  */
 
-/** The phone silhouette both stills and recordings are presented in. */
+/**
+ * The phone silhouette both stills and recordings are presented in.
+ *
+ * `fit` decides which dimension drives the size, and it matters because a
+ * phone is roughly twice as tall as it is wide:
+ *
+ * - `cover` sizes from the tile's width, so the device overflows the bottom
+ *   deliberately — the oversized-phone treatment used in listings, where the
+ *   point is one screen large enough to read.
+ * - `contain` sizes from the tile's height so the whole device fits. Anywhere
+ *   the device itself is the subject, cropping it in half is just a bug.
+ */
 function PhoneFrame({
   aspect,
   width,
+  fit = "cover",
   /** Border tuned to the tile ground, so the phone edge reads on both. */
   edgeClass = "border-ink/10",
   children,
 }: {
   aspect: string;
   width?: string;
+  fit?: "cover" | "contain";
   edgeClass?: string;
   children: React.ReactNode;
 }) {
+  // With one dimension and an aspect-ratio set, the browser derives the
+  // other — so height-driven sizing needs no width maths at all.
+  const size =
+    fit === "contain"
+      ? { height: "86%", top: "7%" }
+      : { width: width ?? "62%", top: "9%" };
+
   return (
     <div
       className={`absolute left-1/2 -translate-x-1/2 overflow-hidden rounded-[1.1rem] border shadow-[0_2rem_4rem_rgba(10,10,10,0.4)] ${edgeClass}`}
-      style={{ width: width ?? "62%", top: "9%", aspectRatio: aspect }}
+      style={{ ...size, aspectRatio: aspect }}
     >
       {children}
     </div>
@@ -37,14 +57,16 @@ function PhoneShot({
   sizes,
   priority = false,
   edgeClass,
+  fit,
 }: {
   shot: NonNullable<Project["shot"]>;
   sizes: string;
   priority?: boolean;
   edgeClass?: string;
+  fit?: "cover" | "contain";
 }) {
   return (
-    <PhoneFrame aspect={shot.aspect} width={shot.width} edgeClass={edgeClass}>
+    <PhoneFrame aspect={shot.aspect} width={shot.width} fit={fit} edgeClass={edgeClass}>
       <Image
         src={shot.src}
         alt={shot.alt}
@@ -61,12 +83,14 @@ function PhoneShot({
 function PhoneDemo({
   demo,
   edgeClass,
+  fit,
 }: {
   demo: NonNullable<Project["demo"]>;
   edgeClass?: string;
+  fit?: "cover" | "contain";
 }) {
   return (
-    <PhoneFrame aspect={demo.aspect} width={demo.width} edgeClass={edgeClass}>
+    <PhoneFrame aspect={demo.aspect} width={demo.width} fit={fit} edgeClass={edgeClass}>
       <ProductVideo demo={demo} preload="metadata" />
     </PhoneFrame>
   );
@@ -125,11 +149,14 @@ export function ProjectTile({
   priority = false,
   /** `card` prefers the tile-optimised capture where one exists. */
   context = "feature",
+  /** See PhoneFrame: `contain` keeps the whole device in frame. */
+  fit = "cover",
 }: {
   project: Project;
   sizes?: string;
   priority?: boolean;
   context?: "feature" | "card";
+  fit?: "cover" | "contain";
 }) {
   // A project with no capture falls back to the placeholder whatever its
   // declared treatment. That way a project can be added to the data before
@@ -150,13 +177,14 @@ export function ProjectTile({
       return (
         <div className="absolute inset-0 bg-[#17121f]">
           {demo ? (
-            <PhoneDemo demo={demo} edgeClass="border-white/15" />
+            <PhoneDemo demo={demo} edgeClass="border-white/15" fit={fit} />
           ) : (
             <PhoneShot
               shot={shot}
               sizes={sizes}
               priority={priority}
               edgeClass="border-white/15"
+              fit={fit}
             />
           )}
         </div>
@@ -166,9 +194,9 @@ export function ProjectTile({
       return (
         <div className="absolute inset-0 bg-[#e9efdb]">
           {demo ? (
-            <PhoneDemo demo={demo} />
+            <PhoneDemo demo={demo} fit={fit} />
           ) : (
-            <PhoneShot shot={shot} sizes={sizes} priority={priority} />
+            <PhoneShot shot={shot} sizes={sizes} priority={priority} fit={fit} />
           )}
         </div>
       );
@@ -177,13 +205,14 @@ export function ProjectTile({
       return (
         <div className="absolute inset-0 bg-[#1a1a1c]">
           {demo ? (
-            <PhoneDemo demo={demo} edgeClass="border-white/12" />
+            <PhoneDemo demo={demo} edgeClass="border-white/12" fit={fit} />
           ) : (
             <PhoneShot
               shot={shot}
               sizes={sizes}
               priority={priority}
               edgeClass="border-white/12"
+              fit={fit}
             />
           )}
         </div>

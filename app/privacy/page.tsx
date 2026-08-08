@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
+import { buildMetadata, absoluteTitle } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Privacy",
-  description: `How ${siteConfig.name} handles the information you share with us.`,
+  ...buildMetadata({
+    title: "Privacy Policy | Whiteframe Studios",
+    description:
+      "How Whiteframe Studios collects, uses and protects the information you share through this site and during a project.",
+    path: "/privacy",
+  }),
+  title: absoluteTitle("Privacy Policy | Whiteframe Studios"),
 };
 
 export default function PrivacyPage() {

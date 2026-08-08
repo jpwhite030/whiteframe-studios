@@ -1,3 +1,4 @@
+import { SmartLink } from "@/components/smart-link";
 import { siteConfig } from "@/lib/site-config";
 
 export function Footer() {
@@ -26,15 +27,27 @@ export function Footer() {
             </a>
           </div>
 
-          <nav aria-label="Footer" className="flex gap-x-16 gap-y-10">
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-16 gap-y-10">
             <ul className="space-y-3">
-              {siteConfig.socials.map((social) => (
+              {siteConfig.nav.map((item) => (
+                <li key={item.href}>
+                  <SmartLink
+                    href={item.href}
+                    className="inline-flex min-h-11 items-center text-sm font-semibold text-light-soft transition-colors duration-200 hover:text-light"
+                  >
+                    {item.label}
+                  </SmartLink>
+                </li>
+              ))}
+            </ul>
+            <ul className="space-y-3">
+              {siteConfig.confirmedSocials.map((social) => (
                 <li key={social.label}>
                   <a
                     href={social.href}
                     target="_blank"
-                    rel="noreferrer"
-                    className="text-sm font-semibold text-light-soft transition-colors duration-200 hover:text-light"
+                    rel="noreferrer noopener"
+                    className="inline-flex min-h-11 items-center text-sm font-semibold text-light-soft transition-colors duration-200 hover:text-light"
                   >
                     {social.label}
                   </a>
@@ -44,12 +57,12 @@ export function Footer() {
             <ul className="space-y-3">
               {siteConfig.legal.map((item) => (
                 <li key={item.href}>
-                  <a
+                  <SmartLink
                     href={item.href}
-                    className="text-sm font-semibold text-light-soft transition-colors duration-200 hover:text-light"
+                    className="inline-flex min-h-11 items-center text-sm font-semibold text-light-soft transition-colors duration-200 hover:text-light"
                   >
                     {item.label}
-                  </a>
+                  </SmartLink>
                 </li>
               ))}
             </ul>

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { capabilities } from "@/data/capabilities";
+import { services } from "@/data/services";
+import { SmartLink } from "@/components/smart-link";
 
 /**
  * Four capability rows. Each row expands to show its supporting detail;
@@ -21,7 +23,7 @@ export function Capabilities() {
       </div>
 
       <div className="mt-12 md:mt-16">
-        {capabilities.map((capability) => {
+        {capabilities.map((capability, index) => {
           const isOpen = openId === capability.id;
           const panelId = `capability-${capability.id}`;
           const buttonId = `capability-trigger-${capability.id}`;
@@ -90,6 +92,23 @@ export function Capabilities() {
                           </li>
                         ))}
                       </ul>
+                      {/* The homepage accordion is a summary; the full page
+                          is where the detail and the indexable content live. */}
+                      {(() => {
+                        const service = services[index];
+                        if (!service) return null;
+                        return (
+                          <div className="mt-7 md:ml-[calc(2.5rem+3rem)]">
+                            <SmartLink
+                              href={`/services/${service.slug}`}
+                              className="inline-flex min-h-11 items-center gap-2 text-sm font-bold underline-offset-4 transition-colors duration-200 hover:text-cobalt hover:underline focus-visible:outline-2 focus-visible:outline-cobalt focus-visible:outline-offset-2"
+                            >
+                              More on {service.name.toLowerCase()}
+                              <span aria-hidden>&rarr;</span>
+                            </SmartLink>
+                          </div>
+                        );
+                      })()}
                     </div>
                   </motion.div>
                 ) : null}

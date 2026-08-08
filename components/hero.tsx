@@ -2,21 +2,13 @@
 
 import { motion } from "motion/react";
 import { AnimatedText } from "@/components/animated-text";
+import { SmartLink } from "@/components/smart-link";
 import { WhiteframeWindow } from "@/components/whiteframe-window";
-import { scrollToHash, useLenis } from "@/lib/lenis-provider";
 import { siteConfig } from "@/lib/site-config";
 
 const { hero } = siteConfig;
 
 export function Hero() {
-  const lenis = useLenis();
-
-  const go = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (!href.startsWith("#")) return;
-    event.preventDefault();
-    scrollToHash(lenis, href);
-  };
-
   return (
     <section
       id="top"
@@ -33,36 +25,32 @@ export function Hero() {
             className="text-[clamp(2.35rem,4.6vw,4.4rem)]"
           />
 
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-8 max-w-md text-lg leading-relaxed font-medium text-ink-soft md:mt-10"
+          {/* CSS-driven so it paints without waiting for hydration — this
+              paragraph is the mobile LCP element. */}
+          <p
+            style={{ animationDelay: "0.18s" }}
+            className="rise mt-8 max-w-md text-lg leading-relaxed font-medium text-ink-soft md:mt-10"
           >
             {hero.supporting}
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.62, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-10 flex flex-wrap items-center gap-4 md:mt-12"
+          <div
+            style={{ animationDelay: "0.3s" }}
+            className="rise mt-10 flex flex-wrap items-center gap-4 md:mt-12"
           >
-            <a
+            <SmartLink
               href={hero.primaryCta.href}
-              onClick={(event) => go(event, hero.primaryCta.href)}
-              className="rounded-full bg-ink px-7 py-4 text-sm font-bold text-light transition-colors duration-300 hover:bg-cobalt"
+              className="min-h-12 rounded-full bg-ink px-7 py-4 text-sm font-bold text-light transition-colors duration-300 hover:bg-cobalt focus-visible:outline-2 focus-visible:outline-cobalt focus-visible:outline-offset-2"
             >
               {hero.primaryCta.label}
-            </a>
-            <a
+            </SmartLink>
+            <SmartLink
               href={hero.secondaryCta.href}
-              onClick={(event) => go(event, hero.secondaryCta.href)}
-              className="rounded-full border border-ink/20 px-7 py-4 text-sm font-bold transition-colors duration-300 hover:border-ink"
+              className="min-h-12 rounded-full border border-ink/25 px-7 py-4 text-sm font-bold transition-colors duration-300 hover:border-ink focus-visible:outline-2 focus-visible:outline-cobalt focus-visible:outline-offset-2"
             >
               {hero.secondaryCta.label}
-            </a>
-          </motion.div>
+            </SmartLink>
+          </div>
         </div>
 
         <motion.div
@@ -81,22 +69,30 @@ export function Hero() {
         transition={{ duration: 0.6, delay: 0.9 }}
         className="shell flex items-center justify-between border-t border-ink/10 py-5"
       >
-        <p className="label text-ink-faint">
-          Founded by {siteConfig.founder} — {siteConfig.location}
-        </p>
-        <a
-          href="#work"
-          onClick={(event) => go(event, "#work")}
-          className="label group flex items-center gap-2.5 text-ink-faint transition-colors duration-200 hover:text-ink"
+        <ul className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          {hero.proof.map((item, index) => (
+            <li key={item} className="flex items-center gap-3">
+              {index > 0 ? (
+                <span aria-hidden className="text-ink-faint">
+                  ·
+                </span>
+              ) : null}
+              <span className="label text-ink-soft">{item}</span>
+            </li>
+          ))}
+        </ul>
+        <SmartLink
+          href="/work"
+          className="label group hidden items-center gap-2.5 text-ink-soft transition-colors duration-200 hover:text-ink sm:flex"
         >
-          Scroll
+          View our work
           <span
             aria-hidden
-            className="relative block h-4 w-px overflow-hidden bg-ink/25"
+            className="relative block h-4 w-px overflow-hidden bg-ink/30"
           >
             <span className="absolute inset-x-0 top-0 h-2 bg-ink transition-transform duration-500 ease-editorial group-hover:translate-y-2" />
           </span>
-        </a>
+        </SmartLink>
       </motion.div>
     </section>
   );

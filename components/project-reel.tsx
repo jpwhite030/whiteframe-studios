@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { ProjectTile } from "@/components/project-tile";
+import { SmartLink } from "@/components/smart-link";
 import { projects, type Project } from "@/data/projects";
 
 /**
@@ -64,9 +65,9 @@ function ProjectCard({ project }: { project: Project }) {
   // Cards become links the moment a case-study href lands in the data file.
   if (project.href) {
     return (
-      <a href={project.href} className="group block" draggable={false}>
+      <SmartLink href={project.href} className="group block" draggable={false}>
         {inner}
-      </a>
+      </SmartLink>
     );
   }
   return <div className="group">{inner}</div>;

@@ -31,7 +31,7 @@ export function FinalCta() {
 
           <Reveal delay={0.15}>
             <MagneticButton
-              href={mailto}
+              href="/contact"
               strength={12}
               className="group flex size-40 items-center justify-center rounded-full bg-cobalt text-center text-lg leading-tight font-extrabold tracking-tight text-light transition-colors duration-300 hover:bg-light hover:text-ink md:size-48 md:text-xl"
             >
@@ -40,9 +40,15 @@ export function FinalCta() {
           </Reveal>
         </div>
 
+        <Reveal delay={0.08} className="mt-12">
+          <p className="max-w-2xl text-lg leading-relaxed font-medium text-light-soft">
+            {siteConfig.cta.supporting}
+          </p>
+        </Reveal>
+
         <Reveal
           delay={0.1}
-          className="mt-16 flex flex-wrap items-center gap-x-10 gap-y-4 border-t border-light/12 pt-8 md:mt-24"
+          className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-4 border-t border-light/12 pt-8 md:mt-16"
         >
           <a
             href={mailto}

@@ -12,6 +12,12 @@ export type NavItem = {
 export type SocialLink = {
   label: string;
   href: string;
+  /**
+   * Only confirmed accounts are rendered or published as `sameAs`. An
+   * unconfirmed handle is worse than none: a 404 in the footer, and a false
+   * entity signal to search engines that is actively counterproductive.
+   */
+  confirmed: boolean;
 };
 
 export const siteConfig = {
@@ -27,9 +33,9 @@ export const siteConfig = {
   url: "https://whiteframestudios.com",
 
   seo: {
-    title: "Whiteframe Studios — Software, AI and Digital Products",
+    title: "Software Product Studio Sydney | Whiteframe Studios",
     description:
-      "Whiteframe Studios is an independent product studio founded by Jack White, building custom software, AI systems, automation and digital products.",
+      "Whiteframe Studios is a Sydney software product studio specialising in product strategy, UX/UI design, web and mobile development, and AI automation.",
     keywords: [
       "product studio",
       "software development",
@@ -46,9 +52,15 @@ export const siteConfig = {
     /** The same sentence, broken by hand so the hero reads as set type. */
     headlineLines: ["We design and build", "software people", "actually want to use."],
     supporting:
-      "Whiteframe is an independent product studio turning ambitious ideas into brands, apps and digital products.",
-    primaryCta: { label: "View our work", href: "#work" },
-    secondaryCta: { label: "Start a project", href: "#contact" },
+      "Whiteframe is a senior Sydney product studio helping ambitious founders and teams turn ideas into brands, apps and production-ready software.",
+    primaryCta: { label: "View our work", href: "/work" },
+    secondaryCta: { label: "Tell us about your product", href: "/contact" },
+    /** Compact credibility line sitting directly beneath the hero. */
+    proof: [
+      "Senior product team",
+      "Sydney, Australia",
+      "Strategy through production engineering",
+    ],
   },
 
   statement: {
@@ -71,24 +83,50 @@ export const siteConfig = {
   cta: {
     headline: "Have something ambitious in mind?",
     button: "Let’s build it.",
+    /** Sets expectations at the point of enquiry. */
+    supporting:
+      "Tell us what you’re building, where you’re currently stuck and what success looks like. You’ll hear directly from Jack within two business days.",
   },
 
   footerLine: "Independent by design.",
 
+  /** Real routes, so navigation is crawlable rather than anchor-only. */
   nav: [
-    { label: "Work", href: "#work" },
-    { label: "Services", href: "#services" },
-    { label: "Studio", href: "#studio" },
+    { label: "Work", href: "/work" },
+    { label: "Services", href: "/services" },
+    { label: "Studio", href: "/studio" },
+    { label: "Insights", href: "/insights" },
   ] satisfies NavItem[],
 
-  navCta: { label: "Start a project", href: "#contact" } satisfies NavItem,
+  navCta: { label: "Start a project", href: "/contact" } satisfies NavItem,
 
-  /** Placeholder handles — swap for the live accounts before launch. */
+  /**
+   * Checked 2026-08-08: the Instagram handle resolves; the LinkedIn company
+   * page and GitHub organisation both 404. Flip `confirmed` as each account
+   * is created — see CONTENT.md.
+   */
   socials: [
-    { label: "Instagram", href: "https://instagram.com/whiteframestudios" },
-    { label: "LinkedIn", href: "https://linkedin.com/company/whiteframestudios" },
-    { label: "GitHub", href: "https://github.com/whiteframestudios" },
+    {
+      label: "Instagram",
+      href: "https://instagram.com/whiteframestudios",
+      confirmed: true,
+    },
+    {
+      label: "LinkedIn",
+      href: "https://linkedin.com/company/whiteframestudios",
+      confirmed: false,
+    },
+    {
+      label: "GitHub",
+      href: "https://github.com/whiteframestudios",
+      confirmed: false,
+    },
   ] satisfies SocialLink[],
+
+  /** Convenience: the accounts that actually exist. */
+  get confirmedSocials(): SocialLink[] {
+    return this.socials.filter((social) => social.confirmed);
+  },
 
   legal: [
     { label: "Privacy", href: "/privacy" },

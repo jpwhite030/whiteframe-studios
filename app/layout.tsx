@@ -20,11 +20,14 @@ export const metadata: Metadata = {
   },
   description: siteConfig.seo.description,
   keywords: [...siteConfig.seo.keywords],
+  // No default `alternates.canonical` here on purpose: every page sets its
+  // own through buildMetadata(). A default of "/" is worse than none — it
+  // silently tells search engines that any page which forgot one is a
+  // duplicate of the homepage.
   applicationName: siteConfig.name,
   authors: [{ name: siteConfig.founder }],
   creator: siteConfig.founder,
   publisher: siteConfig.name,
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "en_AU",
@@ -50,36 +53,6 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-/** ProfessionalService structured data for the studio. */
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: siteConfig.name,
-  description: siteConfig.seo.description,
-  url: siteConfig.url,
-  email: siteConfig.email,
-  founder: {
-    "@type": "Person",
-    name: siteConfig.founder,
-    jobTitle: "Founder",
-  },
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: siteConfig.locality,
-    addressRegion: siteConfig.region,
-    addressCountry: siteConfig.country,
-  },
-  areaServed: "Worldwide",
-  knowsAbout: [
-    "Software development",
-    "Product strategy",
-    "Brand and interface design",
-    "Artificial intelligence",
-    "Workflow automation",
-  ],
-  sameAs: siteConfig.socials.map((social) => social.href),
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -103,10 +76,6 @@ export default function RootLayout({
         </LenisProvider>
         <CustomCursor />
         <div aria-hidden className="grain" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
       </body>
     </html>
   );

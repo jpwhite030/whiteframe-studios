@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
+import { buildMetadata, absoluteTitle } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Terms",
-  description: `The terms on which ${siteConfig.name} provides this website.`,
+  ...buildMetadata({
+    title: "Terms of Use | Whiteframe Studios",
+    description:
+      "The terms that apply to using the Whiteframe Studios website and to engaging the studio on a project.",
+    path: "/terms",
+  }),
+  title: absoluteTitle("Terms of Use | Whiteframe Studios"),
 };
 
 export default function TermsPage() {

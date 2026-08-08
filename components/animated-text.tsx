@@ -25,12 +25,31 @@ export function AnimatedText({
   delay = 0,
   onMount = false,
 }: AnimatedTextProps) {
-  const viewProps = onMount
-    ? { animate: { y: 0 } }
-    : {
-        whileInView: { y: 0 },
-        viewport: { once: true, margin: "0px 0px -12% 0px" },
-      };
+  // On-mount reveals (the hero H1) run in CSS so they paint on the first
+  // frame instead of waiting for hydration — this element is the mobile LCP.
+  // Scroll-triggered reveals stay on motion, where whileInView is the point.
+  if (onMount) {
+    return (
+      <Tag className={className}>
+        {lines.map((line, index) => (
+          <span key={line} className="block overflow-hidden pb-[0.08em]">
+            <span
+              data-reveal=""
+              className="line-rise block"
+              style={{ animationDelay: `${delay + index * 0.09}s` }}
+            >
+              {line}
+            </span>
+          </span>
+        ))}
+      </Tag>
+    );
+  }
+
+  const viewProps = {
+    whileInView: { y: 0 },
+    viewport: { once: true, margin: "0px 0px -12% 0px" },
+  } as const;
 
   return (
     <Tag className={className}>

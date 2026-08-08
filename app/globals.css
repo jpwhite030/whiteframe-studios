@@ -6,14 +6,18 @@
   --color-cream-100: #eae7df;
   --color-ink: #0d0d0d;
   --color-ink-soft: #57544e;
-  --color-ink-faint: #8b877e;
+  /* 4.70:1 on cream — the previous #8b877e was 3.17:1 and failed AA
+     for the 11px uppercase labels this colour is mostly used for. */
+  --color-ink-faint: #6f6b62;
 
   /* Dark bands */
   --color-dark: #0a0a0a;
   --color-dark-100: #141412;
   --color-light: #f5f3ee;
   --color-light-soft: #a7a49c;
-  --color-light-faint: #6e6b64;
+  /* 4.62:1 on the #0a0a0a dark sections — #6e6b64 was 3.72:1 and
+     failed AA for the 11px uppercase labels it's used for. */
+  --color-light-faint: #7d7a72;
 
   /* Single accent */
   --color-cobalt: #315cff;
@@ -153,4 +157,60 @@
   pointer-events: none;
   opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/*
+ * Above-the-fold entrance, in CSS rather than JS.
+ *
+ * The hero's supporting copy and CTAs used a motion entrance starting at
+ * opacity 0. That makes them invisible until React hydrates and the delay
+ * elapses, which on a throttled mobile connection pushed Largest Contentful
+ * Paint out to 3.5s — the paint was waiting on JavaScript, not on bytes.
+ * A CSS animation runs on the first frame the browser paints, so the same
+ * movement costs nothing in LCP.
+ */
+@keyframes wf-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility rise {
+  animation: wf-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}
+
+/*
+ * The hero headline's line-mask reveal, also in CSS. Same reasoning as
+ * .rise: the H1 is the mobile LCP element, and a JS-driven transform held
+ * it off-screen until hydration. Headings below the fold keep the motion
+ * implementation, since they animate on scroll and never gate first paint.
+ */
+@keyframes wf-line-up {
+  from {
+    transform: translateY(104%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@utility line-rise {
+  animation: wf-line-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line-rise {
+    animation: none;
+  }
 }
