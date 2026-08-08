@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import type { ProjectDemo } from "@/data/projects";
@@ -91,22 +92,40 @@ export function ProductVideo({
   }, [reduceMotion]);
 
   return (
-    <video
-      ref={ref}
-      poster={posterVisible ? demo.poster : undefined}
-      // Muted is what makes autoplay permissible at all; loop and inline
-      // keep it from taking over the page or going fullscreen on iOS.
-      muted
-      loop
-      playsInline
-      preload={preload}
-      controls={manual}
-      aria-label={demo.alt}
-      className={`size-full object-cover ${className}`}
-    >
-      {demo.sources.map((source) => (
-        <source key={source.src} src={source.src} type={source.type} />
-      ))}
-    </video>
+    <span className="absolute inset-0 block">
+      {/* The still sits *behind* the video rather than only on the poster
+          attribute, which the browser discards the moment playback is
+          attempted. Without this the device goes empty during buffering, if
+          autoplay is refused, or if no source is decodable — which is how a
+          working recording still reads as a broken page. */}
+      {posterVisible ? (
+        <Image
+          src={demo.poster}
+          alt=""
+          aria-hidden
+          fill
+          sizes="(min-width: 1024px) 40vw, 88vw"
+          className="object-cover"
+        />
+      ) : null}
+
+      <video
+        ref={ref}
+        poster={posterVisible ? demo.poster : undefined}
+        // Muted is what makes autoplay permissible at all; loop and inline
+        // keep it from taking over the page or going fullscreen on iOS.
+        muted
+        loop
+        playsInline
+        preload={preload}
+        controls={manual}
+        aria-label={demo.alt}
+        className={`absolute inset-0 size-full object-cover ${className}`}
+      >
+        {demo.sources.map((source) => (
+          <source key={source.src} src={source.src} type={source.type} />
+        ))}
+      </video>
+    </span>
   );
 }
