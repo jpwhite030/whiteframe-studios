@@ -36,16 +36,19 @@ Behaviour when unset differs by environment, on purpose:
 A Formspree endpoint works as-is (the payload includes `_subject` and
 `_replyto`).
 
-**Social profile URLs** — checked 2026-08-08 by request:
-`instagram.com/whiteframestudios` resolves;
-`linkedin.com/company/whiteframestudios` and `github.com/whiteframestudios`
-both return **404**.
+**Social profile URLs — none are confirmed as yours.** Checked 2026-08-09:
 
-Each entry in `siteConfig.socials` now carries a `confirmed` flag. Only
-confirmed accounts render in the footer and appear in the `Organization`
-schema's `sameAs`, so the two dead links are no longer published as either
-broken outbound links or false entity signals. Create the accounts and flip
-`confirmed` to `true`, or delete the entries.
+- `instagram.com/whiteframestudios` resolves but belongs to an unrelated
+  Australian **photography** business ("We capture and create photographic
+  moments…"). A 200 response proves an account exists, not that it is ours.
+- `linkedin.com/company/whiteframestudios` — 404
+- `github.com/whiteframestudios` — 404
+
+All three are `confirmed: false`, so none renders in the footer or appears in
+the `Organization` schema. This matters more than it looks: publishing
+another business's profile as `sameAs` tells search engines the two are the
+same entity, which is the opposite of what you need given how crowded this
+name is (see below). Flip `confirmed` only for accounts you actually own.
 
 ## Deliberately empty — awaiting real information
 
@@ -94,9 +97,11 @@ Deeper PubCam coverage (feed, map, events) needs either an account or a pass
 through the age gate, which requires the Simulator's hardware keyboard to be
 connected before a date of birth can be typed.
 
-**Insights.** `data/insights.ts` is an empty array and `/insights` renders an
-honest empty state. The individual post route does not exist yet; add
-`app/insights/[slug]/page.tsx` alongside the first post.
+**Insights.** The first post is live. Adding an entry to `data/insights.ts`
+creates the route and the sitemap entry — the body is an array of blocks
+(`p`, `h2`, `quote`) so a post can carry structure without a markdown
+pipeline. Posts publish under Jack's name and are written in his voice by
+me: read one before it ships and change whatever doesn't sound like you.
 
 ## Content written for you — worth reviewing
 
@@ -179,3 +184,33 @@ Three performance fixes came out of these measurements:
 `--color-light-faint` was a genuine failure and was fixed: `#6e6b64` was
 3.72:1 on the dark sections, below AA for the 11px uppercase labels. It is now
 `#7d7a72` at 4.62:1.
+
+## Being found
+
+As of 2026-08-09 the site does not appear in search for its own name. That is
+expected — the restructure went live the same week, nothing links to it yet,
+and it has not been submitted for indexing. Two things are worth knowing.
+
+**Nothing has been submitted.** Verify the domain in Google Search Console by
+DNS (it is on Vercel nameservers) and submit
+`https://whiteframestudios.com/sitemap.xml`. Until then you are waiting for
+Google to find the site on its own, which it will, slowly. Bing Webmaster
+Tools is worth ten minutes for the same reason.
+
+**The name is crowded.** Searching it surfaces several established
+businesses: a Dublin wedding-photography studio, a Mumbai company, an
+animation studio at `whiteframe-studio.com`, a web design firm at
+`whiteframe.org`, and the Australian photography business holding
+`instagram.com/whiteframestudios`. Several have years of history and real
+backlinks.
+
+Ranking for "whiteframe studios" against that is a slow fight and not the one
+worth picking first. The pages most likely to earn traffic sooner are the
+service pages, which target what someone searches when they do not yet know
+your name — "software development company sydney", "product design sydney".
+Those already have unique titles, descriptions and structured data.
+
+What actually moves this: links from places that already rank. Your own
+GitHub profile, an About page on a client's site, a directory listing, the
+App Store listings for PubCam and Tally. Three or four real links will do
+more than any further on-page work.

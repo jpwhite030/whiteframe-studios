@@ -101,15 +101,18 @@ export const siteConfig = {
   navCta: { label: "Start a project", href: "/contact" } satisfies NavItem,
 
   /**
-   * Checked 2026-08-08: the Instagram handle resolves; the LinkedIn company
-   * page and GitHub organisation both 404. Flip `confirmed` as each account
-   * is created — see CONTENT.md.
+   * Checked 2026-08-09: none of these is confirmed as belonging to the
+   * studio. The Instagram handle resolves but belongs to an unrelated
+   * Australian *photography* business — a 200 response proves an account
+   * exists, not that it is ours, and publishing someone else's profile as
+   * `sameAs` tells search engines the two are the same entity. The LinkedIn
+   * and GitHub URLs 404. Flip `confirmed` only for accounts you own.
    */
   socials: [
     {
       label: "Instagram",
       href: "https://instagram.com/whiteframestudios",
-      confirmed: true,
+      confirmed: false,
     },
     {
       label: "LinkedIn",
