@@ -1,6 +1,7 @@
 "use client";
 
 import Lenis from "lenis";
+import { usePathname } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -23,6 +24,7 @@ export function useLenis() {
  */
 export function LenisProvider({ children }: { children: ReactNode }) {
   const [lenis, setLenis] = useState<Lenis | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -51,6 +53,18 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       instance.destroy();
     };
   }, []);
+
+  // Reset to the top on every navigation.
+  //
+  // Next scrolls the window to 0 when a route changes, but Lenis holds its
+  // own scroll position and writes it back on the next frame — so following
+  // a link from halfway down one page dropped you halfway down the next,
+  // and from the footer it landed at the bottom. Lenis has to be told
+  // separately, immediately so there is no visible travel.
+  useEffect(() => {
+    if (!lenis) return;
+    lenis.scrollTo(0, { immediate: true });
+  }, [pathname, lenis]);
 
   return (
     <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>
