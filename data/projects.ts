@@ -14,6 +14,8 @@ export type ProjectVisualKind =
   | "tally"
   | "still"
   | "kingswood"
+  /** A desktop web app shown as a full-bleed capture, no device frame. */
+  | "web"
   | "placeholder";
 
 export type ProjectShot = {
@@ -668,14 +670,13 @@ export const projects: readonly Project[] = [
       aspect: "1600 / 1000",
       position: "50% 0%",
     },
-    // The motion-blur road reads as noise at card size; the band portrait
-    // crops far better in a 4:5 tile.
+    // The site captured at the card's own 4:5, so its responsive layout
+    // composes the frame — no crop, and the card shows the product rather
+    // than a band photo standing in for it.
     tileShot: {
-      src: "/work/kingswood-portrait.jpg",
-      alt: "Kingswood band portrait in black and white",
-      aspect: "1600 / 1200",
-      // Keep faces in frame when the landscape portrait crops into 4:5.
-      position: "50% 18%",
+      src: "/work/kingswood-card-v1.png",
+      alt: "The Kingswood website at tablet size: Midnight Mavericks album hero with tickets bar, tour dates and listen actions",
+      aspect: "4 / 5",
     },
     featured: {
       headline: "Building a digital experience worthy of the band’s live presence.",
@@ -753,8 +754,14 @@ export const projects: readonly Project[] = [
     tags: ["Product", "3D", "SaaS"],
     status: "In development",
     href: null,
-    visual: "placeholder",
-    alt: "Seat View — capture coming",
+    visual: "web",
+    shot: {
+      // The app running locally, captured at the card's own 4:5 at 2x.
+      src: "/work/seatview-card-v1.png",
+      alt: "Seat View showing a cinema seat map for The Ritz Randwick, seat AA14 selected with sightline stats and a 3D view of the auditorium",
+      aspect: "4 / 5",
+    },
+    alt: "Seat View cinema seat-selection interface",
   },
 ];
 
