@@ -14,8 +14,6 @@ export type ProjectVisualKind =
   | "tally"
   | "still"
   | "kingswood"
-  /** A desktop web app shown as a full-bleed capture, no device frame. */
-  | "web"
   | "placeholder";
 
 export type ProjectShot = {
@@ -734,34 +732,6 @@ export const projects: readonly Project[] = [
       relatedServices: ["product-design", "software-development"],
     },
     alt: "Kingswood band photography",
-  },
-  {
-    slug: "scaffold-visualiser",
-    index: "05",
-    name: "Scaffold Visualiser",
-    tagline: "Faster planning and visualisation for scaffold projects",
-    tags: ["Product", "3D", "Web"],
-    status: "In development",
-    href: null,
-    visual: "placeholder",
-    alt: "Scaffold Visualiser — capture coming",
-  },
-  {
-    slug: "seat-view",
-    index: "06",
-    name: "Seat View",
-    tagline: "Interactive 3D cinema seat-selection software",
-    tags: ["Product", "3D", "SaaS"],
-    status: "In development",
-    href: null,
-    visual: "web",
-    shot: {
-      // The app running locally, captured at the card's own 4:5 at 2x.
-      src: "/work/seatview-card-v1.png",
-      alt: "Seat View showing a cinema seat map for The Ritz Randwick, seat AA14 selected with sightline stats and a 3D view of the auditorium",
-      aspect: "4 / 5",
-    },
-    alt: "Seat View cinema seat-selection interface",
   },
 ];
 

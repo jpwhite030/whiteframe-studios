@@ -23,7 +23,6 @@ export function projectGround(visual: Project["visual"]): string {
     case "still":
       return "bg-[#1a1a1c]";
     case "kingswood":
-    case "web":
       return "bg-dark";
     default:
       return "bg-[#f2f0eb]";
@@ -240,7 +239,6 @@ export function ProjectTile({
       );
 
     case "kingswood":
-    case "web":
       return (
         <div className="absolute inset-0 bg-dark">
           {demo ? (
