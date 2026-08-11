@@ -661,9 +661,12 @@ export const projects: readonly Project[] = [
     href: "/work/kingswood",
     visual: "kingswood",
     shot: {
-      src: "/work/kingswood-hero.jpg",
-      alt: "Black-and-white photograph of a dirt road cutting through hills, from the Kingswood site",
-      aspect: "2400 / 1350",
+      // The site itself, captured running locally at 2x — the band photo
+      // alone read as a broken image; the designed page is the product.
+      src: "/work/kingswood-site-v1.png",
+      alt: "The Kingswood website hero: Midnight Mavericks album announcement set over black-and-white touring photography, with tour and listen actions",
+      aspect: "1600 / 1000",
+      position: "50% 0%",
     },
     // The motion-blur road reads as noise at card size; the band portrait
     // crops far better in a 4:5 tile.

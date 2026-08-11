@@ -103,23 +103,22 @@ export function SelectedWork() {
         </Reveal>
       </article>
 
-      {/* 03 — full-bleed photography */}
+      {/* 03 — the product full-bleed. The capture is the Kingswood site
+          itself, whose own display type carries the image — so the studio's
+          heading sits on cream above it rather than fighting it as an
+          overlay. */}
       <article className="py-14 md:py-20">
-        <RevealImage className="relative">
-          <div className="relative h-[60svh] min-h-[380px] md:h-[76svh]">
+        <Reveal className="shell">
+          <p className="label text-ink-faint">
+            {third.index} — {third.tags.join(" · ")}
+          </p>
+          <h3 className="mt-4 max-w-2xl text-[clamp(2rem,4.4vw,4rem)]">
+            {third.featured!.headline}
+          </h3>
+        </Reveal>
+        <RevealImage className="mt-10 md:mt-14">
+          <div className="relative h-[60svh] min-h-[380px] md:h-[82svh]">
             <ProjectTile project={third} sizes="100vw" />
-            <div
-              aria-hidden
-              className="absolute inset-0 bg-gradient-to-t from-dark/70 via-dark/10 to-transparent"
-            />
-            <div className="shell absolute inset-x-0 bottom-0 pb-10 md:pb-14">
-              <p className="label text-light-soft">
-                {third.index} — {third.tags.join(" · ")}
-              </p>
-              <h3 className="mt-4 max-w-2xl text-[clamp(2rem,4.4vw,4rem)] text-light">
-                {third.featured!.headline}
-              </h3>
-            </div>
           </div>
         </RevealImage>
         <Reveal className="shell mt-8 flex flex-wrap items-center justify-between gap-6">
