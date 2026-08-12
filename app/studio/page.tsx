@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { FinalCta } from "@/components/final-cta";
@@ -39,17 +40,34 @@ export default function StudioPage() {
         />
 
         <Section title="How we work">
-          <div className="max-w-2xl space-y-6">
-            <p className="text-lg leading-relaxed font-medium text-ink-soft">
-              You work directly with the people designing and building your
-              product. There is no account layer, no relay between the brief and
-              the build, and no handover point where intent gets lost.
-            </p>
-            <p className="text-lg leading-relaxed font-medium text-ink-soft">
-              In practice that means decisions get made in the conversation
-              rather than after it, and the person answering a question about
-              the interface is the person who designed it.
-            </p>
+          <div className="grid gap-x-14 gap-y-10 lg:grid-cols-12">
+            <div className="max-w-2xl space-y-6 lg:col-span-7">
+              <p className="text-lg leading-relaxed font-medium text-ink-soft">
+                You work directly with the people designing and building your
+                product. There is no account layer, no relay between the brief
+                and the build, and no handover point where intent gets lost.
+              </p>
+              <p className="text-lg leading-relaxed font-medium text-ink-soft">
+                In practice that means decisions get made in the conversation
+                rather than after it, and the person answering a question about
+                the interface is the person who designed it.
+              </p>
+            </div>
+
+            {/* The studio itself: a working warehouse, photographed from the
+                mezzanine. Pulled up beside the page header on large screens,
+                where the right column otherwise sits empty. */}
+            <figure className="lg:col-span-4 lg:col-start-9 lg:-mt-56">
+              <div className="relative aspect-[930/1608] overflow-hidden rounded-2xl">
+                <Image
+                  src="/studio/warehouse-v1.jpg"
+                  alt="Jack White working at a desk inside the Whiteframe warehouse — concrete walls, monitors, and a car parked beside the desks"
+                  fill
+                  sizes="(min-width: 1024px) 30vw, 92vw"
+                  className="object-cover"
+                />
+              </div>
+            </figure>
           </div>
         </Section>
 

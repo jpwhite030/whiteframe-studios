@@ -14,6 +14,8 @@ export type ProjectVisualKind =
   | "tally"
   | "still"
   | "kingswood"
+  /** The yard-monitoring system: a full-bleed annotated CCTV frame. */
+  | "yard"
   | "placeholder";
 
 export type ProjectShot = {
@@ -732,6 +734,25 @@ export const projects: readonly Project[] = [
       relatedServices: ["product-design", "software-development"],
     },
     alt: "Kingswood band photography",
+  },
+  {
+    slug: "yard-monitor",
+    index: "05",
+    name: "Yard Monitor",
+    tagline: "Computer vision on a working scaffold yard",
+    tags: ["AI", "Computer Vision", "Operations"],
+    status: "Running in production",
+    href: null,
+    visual: "yard",
+    shot: {
+      // A real frame from the yard's rear-shed camera with the model's true
+      // detections drawn as thin boxes at full resolution. Labels and
+      // confidences render as HTML in the tile, not pixels in the image.
+      src: "/work/yard-monitor-card-v4.jpg",
+      alt: "CCTV frame of a scaffolding yard with detection boxes around two people and a forklift, racks of scaffold tube throughout",
+      aspect: "1400 / 1438",
+    },
+    alt: "Yard Monitor detection frame",
   },
 ];
 
