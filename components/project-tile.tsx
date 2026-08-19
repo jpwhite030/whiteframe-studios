@@ -23,7 +23,6 @@ export function projectGround(visual: Project["visual"]): string {
     case "still":
       return "bg-[#1a1a1c]";
     case "kingswood":
-    case "yard":
       return "bg-dark";
     default:
       return "bg-[#f2f0eb]";
@@ -189,7 +188,7 @@ export function ProjectTile({
   const shot =
     (context === "card" ? project.tileShot : undefined) ?? project.shot!;
 
-  // Cards stay on stills: a reel of five projects must not become five
+  // Cards stay on stills: a reel of four projects must not become four
   // videos decoding at once. Only the large feature contexts play.
   const demo = context === "feature" ? project.demo : undefined;
 
@@ -255,52 +254,6 @@ export function ProjectTile({
               style={{ objectPosition: shot.position ?? "50% 50%" }}
             />
           )}
-        </div>
-      );
-
-    case "yard":
-      // A monitoring feed, not a photograph. The CCTV frame sits contained
-      // in a panel — blowing camera footage up full-bleed only magnifies
-      // its grain — and every label is real text, not pixels in the image.
-      return (
-        <div className="absolute inset-0 flex flex-col bg-[#101013] p-[5cqw] @container">
-          <div className="flex items-center justify-between pb-[3.5cqw]">
-            <span className="flex items-center gap-[1.8cqw]">
-              <span className="relative flex size-[1.6cqw]">
-                <span className="absolute inset-0 animate-ping rounded-full bg-cobalt/60" />
-                <span className="relative size-full rounded-full bg-cobalt" />
-              </span>
-              <span className="label text-light-soft">Rear shed — Cam 5</span>
-            </span>
-            <span className="label text-light-faint">Live · 24/7</span>
-          </div>
-
-          <div className="relative min-h-0 flex-1 overflow-hidden rounded-lg">
-            <Image
-              src={shot.src}
-              alt={shot.alt}
-              fill
-              sizes={sizes}
-              priority={priority}
-              className="object-cover"
-            />
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-y-[1.8cqw] pt-[3.5cqw]">
-            <div className="flex flex-wrap gap-[1.8cqw]">
-              {["Person · 51%", "Person · 41%", "Forklift · 48%"].map(
-                (detection) => (
-                  <span
-                    key={detection}
-                    className="rounded-full border border-cobalt/40 bg-cobalt/10 px-[2.6cqw] py-[1.4cqw] text-[2.8cqw] font-bold tracking-tight text-light"
-                  >
-                    {detection}
-                  </span>
-                ),
-              )}
-            </div>
-            <span className="label text-light-faint">Custom model</span>
-          </div>
         </div>
       );
   }
